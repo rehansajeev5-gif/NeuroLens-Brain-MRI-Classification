@@ -1,12 +1,23 @@
-﻿.venv/
+## Python virtual environment
+.venv/
 venv/
 env/
+
+# Python cache
 __pycache__/
 *.py[cod]
+
+# VS Code settings
 .vscode/
+
+# Secrets
 .env
 .env.*
+
+# Dataset
 dataset/
 datasets/
 data/
+
+# Logs
 *.log
