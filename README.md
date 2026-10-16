@@ -1,5 +1,9 @@
 # 🧠 NeuroLens — Brain MRI Classification
 
+🚀 **Live Website:** [https://neurolens-brain-mri-classification-1.onrender.com/]
+
+An educational AI project that classifies brain MRI images into four categories.# 🧠 NeuroLens — Brain MRI Classification
+
 NeuroLens is an AI-powered web application that uses deep learning to classify brain MRI images into four categories. It combines a web interface with a PyTorch image classification model.
 
 ## 🚀 Features
