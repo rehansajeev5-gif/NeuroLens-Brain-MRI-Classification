@@ -1,13 +1,753 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NeuroLens | MRI Research Lab</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
-<body><nav><a class="brand" href="#"><span class="logo">N</span> NeuroLens<span class="dot">.</span></a><span class="navtag">MRI RESEARCH LAB</span></nav>
-<main><section class="hero"><div class="eyebrow"><i></i> COMPUTER VISION · MEDICAL IMAGING</div><h1>See patterns.<br><em>Support discovery.</em></h1><p class="intro">An educational MRI image classification workspace for exploring four dataset categories with machine-learning models.</p>
-<div class="classrow"><span>Glioma</span><span>Meningioma</span><span>No tumor label</span><span>Pituitary</span></div></section>
-<section class="workspace"><div class="panel upload-panel"><div class="paneltop"><div><small>01 / INPUT</small><h2>Upload MRI scan</h2></div><span class="step">↗</span></div>
-<form id="uploadForm"><label class="dropzone" id="dropzone"><input id="images" type="file" name="images" accept=".jpg,.jpeg,.png,.webp" multiple required><span class="uploadicon">↑</span><strong>Drop image files here</strong><span>or click to browse · JPG, PNG, WEBP</span><small>Multiple images supported</small></label><div id="fileList" class="filelist">No images selected</div><button id="submitBtn" class="primary" type="submit">Analyze image <span>→</span></button></form>
-<div class="modelstate {% if ready %}ready{% endif %}"><span></span>{% if ready %}Trained model detected{% else %}Model not trained yet — setup required{% endif %}</div></div>
-<div class="panel results-panel"><div class="paneltop"><div><small>02 / OUTPUT</small><h2>Prediction results</h2></div><span class="badge">DEMO</span></div><div id="empty" class="empty"><div class="scanart"><div class="scanring"></div><div class="scanbrain">◎</div></div><h3>Waiting for an image</h3><p>Your model results will appear here with class scores.</p></div><div id="results"></div></div></section>
-<section class="info-grid"><article><small>MODEL OUTPUT</small><h3>Class probabilities</h3><p>Score bars reflect the model's relative outputs, not a medically calibrated likelihood.</p></article><article><small>MODEL BENCHMARKS</small><h3>Compare three architectures</h3><p>Training script evaluates MobileNetV3-Small, ResNet18, and EfficientNet-B0.</p></article><article><small>TRANSPARENCY</small><h3>Research, not diagnosis</h3><p>Always seek qualified clinical interpretation. A model can be wrong or uncertain.</p></article></section>
-<footer><span>NEUROLENS / EDUCATIONAL PROTOTYPE</span><span>Human expertise remains essential.</span></footer></main>
-<div class="toast" id="toast"></div><script src="{{ url_for('static', filename='app.js') }}"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#080b16">
+    <meta name="description"
+          content="NeuroLens is an educational AI workspace for brain MRI image classification.">
+
+    <title>NeuroLens — AI Imaging Intelligence</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Background atmosphere -->
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="grid-background"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <a class="brand" href="#" aria-label="NeuroLens home">
+
+            <span class="brand-mark">
+                <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                    <path d="M20 5V35M5 20H35"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          opacity=".35"/>
+
+                    <circle cx="20" cy="20" r="12"
+                            stroke="currentColor"
+                            stroke-width="1.5"/>
+
+                    <circle cx="20" cy="20" r="5"
+                            fill="currentColor"/>
+
+                    <circle cx="30" cy="10" r="3"
+                            fill="#9C8CFF"/>
+                </svg>
+            </span>
+
+            <span class="brand-name">
+                NeuroLens<span class="brand-period">.</span>
+            </span>
+
+        </a>
+
+        <div class="nav-center">
+            <span class="status-dot"></span>
+            AI IMAGING WORKSPACE
+        </div>
+
+        <a class="github-link"
+           href="https://github.com/rehansajeev5-gif/NeuroLens-Brain-MRI-Classification"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <span>GitHub</span>
+            <span aria-hidden="true">↗</span>
+
+        </a>
+
+    </nav>
+
+
+    <main>
+
+        <!-- Hero section -->
+        <section class="hero">
+
+            <div class="hero-copy">
+
+                <div class="eyebrow">
+                    <span class="eyebrow-line"></span>
+                    COMPUTER VISION / MEDICAL IMAGING
+                </div>
+
+                <h1>
+                    See beyond<br>
+                    the <span class="gradient-text">image.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Explore brain MRI classification through machine learning.
+                    Upload an image, run your model, and inspect its predicted
+                    category and class scores.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a href="#workspace" class="hero-button">
+                        Explore workspace
+                        <span aria-hidden="true">↓</span>
+                    </a>
+
+                    <span class="hero-note">
+                        Educational AI prototype
+                    </span>
+
+                </div>
+
+                <div class="category-strip">
+
+                    <span class="category-label">SUPPORTED LABELS</span>
+
+                    <div class="category-list">
+                        <span class="category-pill">
+                            <i class="category-dot dot-cyan"></i>
+                            Glioma
+                        </span>
+
+                        <span class="category-pill">
+                            <i class="category-dot dot-purple"></i>
+                            Meningioma
+                        </span>
+
+                        <span class="category-pill">
+                            <i class="category-dot dot-blue"></i>
+                            No tumor
+                        </span>
+
+                        <span class="category-pill">
+                            <i class="category-dot dot-pink"></i>
+                            Pituitary
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Decorative neural illustration -->
+            <div class="hero-visual" aria-hidden="true">
+
+                <div class="visual-orbit orbit-outer"></div>
+                <div class="visual-orbit orbit-middle"></div>
+                <div class="visual-orbit orbit-inner"></div>
+
+                <div class="visual-glow"></div>
+
+                <div class="brain-visual">
+
+                    <svg viewBox="0 0 300 300"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+
+                        <defs>
+
+                            <linearGradient id="brainGradient"
+                                            x1="50"
+                                            y1="30"
+                                            x2="250"
+                                            y2="270"
+                                            gradientUnits="userSpaceOnUse">
+
+                                <stop stop-color="#79F3FF"/>
+                                <stop offset=".5" stop-color="#8D91FF"/>
+                                <stop offset="1" stop-color="#C18BFF"/>
+
+                            </linearGradient>
+
+                            <filter id="brainGlow"
+                                    x="-50%"
+                                    y="-50%"
+                                    width="200%"
+                                    height="200%">
+
+                                <feGaussianBlur stdDeviation="3"
+                                                result="blur"/>
+
+                                <feMerge>
+                                    <feMergeNode in="blur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+
+                            </filter>
+
+                        </defs>
+
+                        <!-- Stylized decorative brain illustration -->
+                        <g stroke="url(#brainGradient)"
+                           stroke-width="2"
+                           stroke-linecap="round"
+                           stroke-linejoin="round"
+                           filter="url(#brainGlow)">
+
+                            <path d="M150 65
+                                     C133 44 103 52 97 75
+                                     C73 72 58 94 68 115
+                                     C48 132 59 157 77 165
+                                     C69 188 86 207 108 204
+                                     C116 226 139 231 150 214
+                                     Z"/>
+
+                            <path d="M150 65
+                                     C167 44 197 52 203 75
+                                     C227 72 242 94 232 115
+                                     C252 132 241 157 223 165
+                                     C231 188 214 207 192 204
+                                     C184 226 161 231 150 214
+                                     Z"/>
+
+                            <path d="M150 66V214"/>
+
+                            <path d="M97 75
+                                     C119 78 125 95 115 110
+                                     C104 124 111 140 130 143"/>
+
+                            <path d="M68 115
+                                     C92 110 105 124 101 143
+                                     C98 158 110 168 126 164"/>
+
+                            <path d="M77 165
+                                     C99 162 110 179 108 204"/>
+
+                            <path d="M203 75
+                                     C181 78 175 95 185 110
+                                     C196 124 189 140 170 143"/>
+
+                            <path d="M232 115
+                                     C208 110 195 124 199 143
+                                     C202 158 190 168 174 164"/>
+
+                            <path d="M223 165
+                                     C201 162 190 179 192 204"/>
+
+                            <path d="M115 110L138 116L150 101"/>
+
+                            <path d="M185 110L162 116L150 101"/>
+
+                            <path d="M101 143L127 137L150 151"/>
+
+                            <path d="M199 143L173 137L150 151"/>
+
+                            <path d="M108 184L132 177L150 190"/>
+
+                            <path d="M192 184L168 177L150 190"/>
+
+                        </g>
+
+                        <g fill="#91F4FF">
+                            <circle cx="150" cy="101" r="4"/>
+                            <circle cx="127" cy="137" r="3"/>
+                            <circle cx="173" cy="137" r="3"/>
+                            <circle cx="150" cy="190" r="4"/>
+                        </g>
+
+                    </svg>
+
+                </div>
+
+                <div class="visual-label label-top">
+                    <span class="label-pulse"></span>
+                    NEURAL MAPPING
+                </div>
+
+                <div class="visual-label label-bottom">
+                    <span>AI</span>
+                    IMAGE CLASSIFICATION
+                </div>
+
+                <div class="floating-node node-one"></div>
+                <div class="floating-node node-two"></div>
+                <div class="floating-node node-three"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Workspace -->
+        <section class="workspace-section" id="workspace">
+
+            <div class="section-heading">
+
+                <div>
+                    <div class="section-kicker">
+                        <span>01</span>
+                        YOUR WORKSPACE
+                    </div>
+
+                    <h2>Let's examine the <span>details.</span></h2>
+
+                    <p>
+                        Upload MRI images and explore your model's predictions.
+                    </p>
+                </div>
+
+                <div class="model-indicator {% if ready %}ready{% endif %}">
+
+                    <span class="model-indicator-dot"></span>
+
+                    <div>
+                        <strong>
+                            {% if ready %}
+                                Model available
+                            {% else %}
+                                Model unavailable
+                            {% endif %}
+                        </strong>
+
+                        <small>
+                            {% if ready %}
+                                Classification model detected
+                            {% else %}
+                                Check your model setup
+                            {% endif %}
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="workspace-grid">
+
+                <!-- Upload panel -->
+                <section class="panel upload-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title-group">
+
+                            <span class="panel-number">01 / INPUT</span>
+
+                            <h3>Upload MRI scan</h3>
+
+                            <p>Choose the images you want to analyze.</p>
+
+                        </div>
+
+                        <span class="panel-symbol">↗</span>
+
+                    </div>
+
+
+                    <form id="uploadForm">
+
+                        <label class="dropzone" id="dropzone">
+
+                            <input
+                                id="images"
+                                type="file"
+                                name="images"
+                                accept=".jpg,.jpeg,.png,.webp"
+                                multiple
+                                required
+                            >
+
+                            <span class="upload-icon">
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     aria-hidden="true">
+
+                                    <path d="M12 16V4M7 9L12 4L17 9"
+                                          stroke="currentColor"
+                                          stroke-width="1.7"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+
+                                    <path d="M5 14V19C5 19.55 5.45 20 6 20H18C18.55 20 19 19.55 19 19V14"
+                                          stroke="currentColor"
+                                          stroke-width="1.7"
+                                          stroke-linecap="round"/>
+
+                                </svg>
+                            </span>
+
+                            <strong>Drop your images here</strong>
+
+                            <span class="dropzone-subtitle">
+                                or <span class="browse-text">browse files</span>
+                            </span>
+
+                            <div class="file-formats">
+                                <span>JPG</span>
+                                <span>PNG</span>
+                                <span>WEBP</span>
+                            </div>
+
+                            <small class="dropzone-footnote">
+                                Multiple images supported
+                            </small>
+
+                        </label>
+
+
+                        <div class="selected-files">
+
+                            <div class="selected-files-heading">
+
+                                <span>SELECTED FILES</span>
+
+                                <span class="file-count" id="fileCount">0</span>
+
+                            </div>
+
+                            <div id="fileList" class="filelist">
+                                No images selected
+                            </div>
+
+                            <div id="filePreview" class="file-preview"></div>
+
+                        </div>
+
+
+                        <button
+                            id="submitBtn"
+                            class="primary"
+                            type="submit">
+
+                            <span class="button-content">
+                                <span class="button-icon">✳</span>
+                                Analyze images
+                            </span>
+
+                            <span class="button-arrow">↗</span>
+
+                        </button>
+
+                        <p class="upload-hint">
+                            <span>ⓘ</span>
+                            Use supported image files only.
+                        </p>
+
+                    </form>
+
+                </section>
+
+
+                <!-- Results panel -->
+                <section class="panel results-panel" id="resultsPanel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-title-group">
+
+                            <span class="panel-number">02 / OUTPUT</span>
+
+                            <h3>Analysis results</h3>
+
+                            <p>Your model output will appear here.</p>
+
+                        </div>
+
+                        <span class="result-badge">
+                            <span class="result-badge-dot"></span>
+                            MODEL OUTPUT
+                        </span>
+
+                    </div>
+
+
+                    <!-- Initial empty state -->
+                    <div id="empty" class="empty">
+
+                        <div class="empty-visual">
+
+                            <div class="empty-orbit empty-orbit-one"></div>
+                            <div class="empty-orbit empty-orbit-two"></div>
+
+                            <div class="empty-center">
+
+                                <svg viewBox="0 0 64 64"
+                                     fill="none"
+                                     aria-hidden="true">
+
+                                    <rect x="12"
+                                          y="12"
+                                          width="40"
+                                          height="40"
+                                          rx="12"
+                                          stroke="currentColor"
+                                          stroke-width="1.5"/>
+
+                                    <circle cx="32"
+                                            cy="32"
+                                            r="12"
+                                            stroke="currentColor"
+                                            stroke-width="1.5"
+                                            stroke-dasharray="3 4"/>
+
+                                    <circle cx="32"
+                                            cy="32"
+                                            r="4"
+                                            fill="currentColor"/>
+
+                                    <path d="M32 4V12M32 52V60M4 32H12M52 32H60"
+                                          stroke="currentColor"
+                                          stroke-width="1.5"
+                                          stroke-linecap="round"/>
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                        <span class="empty-kicker">READY WHEN YOU ARE</span>
+
+                        <h3>Awaiting your image</h3>
+
+                        <p>
+                            Your results and class scores will appear here
+                            after you run an analysis.
+                        </p>
+
+                        <div class="empty-decoration">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- JavaScript inserts prediction cards here -->
+                    <div id="results"></div>
+
+                    <div id="analysisStatus"
+                         class="analysis-status"
+                         aria-live="polite"></div>
+
+                </section>
+
+            </div>
+
+        </section>
+
+
+        <!-- Information cards -->
+        <section class="insights-section">
+
+            <div class="section-heading insights-heading">
+
+                <div>
+                    <div class="section-kicker">
+                        <span>03</span>
+                        INSIDE NEUROLENS
+                    </div>
+
+                    <h2>Technology with <span>transparency.</span></h2>
+
+                    <p>
+                        Understand what the model does and what its outputs mean.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <article class="info-card">
+
+                    <div class="info-icon icon-cyan">
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             aria-hidden="true">
+
+                            <rect x="3"
+                                  y="3"
+                                  width="7"
+                                  height="7"
+                                  rx="2"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"/>
+
+                            <rect x="14"
+                                  y="3"
+                                  width="7"
+                                  height="7"
+                                  rx="2"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"/>
+
+                            <rect x="3"
+                                  y="14"
+                                  width="7"
+                                  height="7"
+                                  rx="2"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"/>
+
+                            <rect x="14"
+                                  y="14"
+                                  width="7"
+                                  height="7"
+                                  rx="2"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"/>
+
+                        </svg>
+                    </div>
+
+                    <span class="info-label">01 / CLASSIFICATION</span>
+
+                    <h3>Four dataset categories</h3>
+
+                    <p>
+                        Explore predictions for glioma, meningioma, no-tumor,
+                        and pituitary labels in the dataset.
+                    </p>
+
+                </article>
+
+
+                <article class="info-card">
+
+                    <div class="info-icon icon-purple">
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             aria-hidden="true">
+
+                            <path d="M4 19V5M4 19H21"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"/>
+
+                            <path d="M7 15L11 11L14 13L20 6"
+                                  stroke="currentColor"
+                                  stroke-width="1.8"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+
+                            <circle cx="20"
+                                    cy="6"
+                                    r="2"
+                                    fill="currentColor"/>
+
+                        </svg>
+                    </div>
+
+                    <span class="info-label">02 / MODEL SCORES</span>
+
+                    <h3>Inspect the outputs</h3>
+
+                    <p>
+                        Compare the scores returned by the model.
+                        These values are not necessarily calibrated probabilities.
+                    </p>
+
+                </article>
+
+
+                <article class="info-card">
+
+                    <div class="info-icon icon-pink">
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             aria-hidden="true">
+
+                            <path d="M12 3L20 6V11C20 16 16.5 19.5 12 21C7.5 19.5 4 16 4 11V6L12 3Z"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"
+                                  stroke-linejoin="round"/>
+
+                            <path d="M12 8V12"
+                                  stroke="currentColor"
+                                  stroke-width="1.8"
+                                  stroke-linecap="round"/>
+
+                            <circle cx="12"
+                                    cy="15"
+                                    r="1"
+                                    fill="currentColor"/>
+
+                        </svg>
+                    </div>
+
+                    <span class="info-label">03 / RESPONSIBLE AI</span>
+
+                    <h3>Research, not diagnosis</h3>
+
+                    <p>
+                        This educational prototype is not clinically validated.
+                        It must not be used to make medical decisions.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Disclaimer -->
+        <section class="disclaimer-panel">
+
+            <div class="disclaimer-symbol">!</div>
+
+            <div>
+
+                <strong>Important notice</strong>
+
+                <p>
+                    NeuroLens is an educational machine-learning project.
+                    Predictions may be incorrect and are not a substitute
+                    for assessment by a qualified medical professional.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <a class="footer-brand" href="#">
+            NeuroLens<span>.</span>
+        </a>
+
+        <p>
+            Built for exploration.
+            <span>Designed with curiosity.</span>
+        </p>
+
+        <span class="footer-status">
+            <i></i>
+            EDUCATIONAL PROTOTYPE
+        </span>
+
+    </footer>
+
+
+    <!-- Toast notification -->
+    <div class="toast"
+         id="toast"
+         role="status"
+         aria-live="polite"></div>
+
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>
