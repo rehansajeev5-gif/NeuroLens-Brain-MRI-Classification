@@ -1,37 +1,31 @@
+// ==========================================
+// NEUROLENS — PREMIUM IMAGE ANALYSIS UI
+// Existing Flask /predict endpoint preserved
+// ==========================================
+
 const input = document.getElementById("images");
 const list = document.getElementById("fileList");
-const fileCount = document.getElementById("fileCount");
-const filePreview = document.getElementById("filePreview");
-
 const form = document.getElementById("uploadForm");
 const drop = document.getElementById("dropzone");
 const btn = document.getElementById("submitBtn");
-
 const results = document.getElementById("results");
 const empty = document.getElementById("empty");
 const toast = document.getElementById("toast");
-const analysisStatus = document.getElementById("analysisStatus");
 
-let toastTimer;
-let previewUrls = [];
-let latestResults = [];
+let selectedFiles = [];
 
-
-/* Notifications */
+// ---------- Notifications ----------
 
 function showToast(message) {
     toast.textContent = message;
     toast.classList.add("show");
 
-    clearTimeout(toastTimer);
-
-    toastTimer = setTimeout(() => {
+    setTimeout(() => {
         toast.classList.remove("show");
     }, 3200);
 }
 
-
-/* HTML escaping */
+// ---------- HTML escaping ----------
 
 function esc(value) {
     return String(value).replace(/[&<>"']/g, character => ({
@@ -43,62 +37,151 @@ function esc(value) {
     })[character]);
 }
 
+// ---------- Create preview container ----------
 
-/* Clean up image preview URLs */
+const previewGrid = document.createElement("div");
+previewGrid.className = "preview-grid";
+previewGrid.id = "previewGrid";
 
-function clearPreviews() {
-    previewUrls.forEach(url => URL.revokeObjectURL(url));
-    previewUrls = [];
+list.insertAdjacentElement("afterend", previewGrid);
+
+// ---------- File validation ----------
+
+function validFile(file) {
+    return (
+        ["image/jpeg", "image/png", "image/webp"].includes(file.type)
+    );
 }
 
+// ---------- Update file input ----------
 
-/* Update the selected files */
+function syncInput() {
+    const transfer = new DataTransfer();
 
-function updateFiles() {
-    clearPreviews();
+    selectedFiles.forEach(file => {
+        transfer.items.add(file);
+    });
 
-    const files = Array.from(input.files);
+    input.files = transfer.files;
+}
 
-    fileCount.textContent = files.length;
-    filePreview.replaceChildren();
+// ---------- Render image previews ----------
 
-    if (!files.length) {
+function renderPreviews() {
+    previewGrid.innerHTML = "";
+
+    if (!selectedFiles.length) {
         list.textContent = "No images selected";
+        previewGrid.style.display = "none";
         return;
     }
 
-    list.textContent = files
-        .map(file => file.name)
-        .join(", ");
+    list.textContent =
+        `${selectedFiles.length} image(s) ready for analysis`;
 
-    files.forEach(file => {
-        if (!file.type.startsWith("image/")) {
-            return;
-        }
+    previewGrid.style.display = "grid";
 
-        const url = URL.createObjectURL(file);
-        previewUrls.push(url);
+    selectedFiles.forEach((file, index) => {
+        const card = document.createElement("div");
+        card.className = "preview-card";
 
-        const item = document.createElement("div");
-        item.className = "preview-item";
+        const imageURL = URL.createObjectURL(file);
 
-        const image = document.createElement("img");
-        image.src = url;
-        image.alt = `Preview of ${file.name}`;
+        card.innerHTML = `
+            <div class="preview-image-wrap">
+                <img
+                    src="${imageURL}"
+                    alt="Preview of ${esc(file.name)}"
+                    class="preview-image"
+                >
 
-        const filename = document.createElement("span");
-        filename.textContent = file.name;
-        filename.title = file.name;
+                <span class="preview-index">
+                    ${(index + 1).toString().padStart(2, "0")}
+                </span>
 
-        item.append(image, filename);
-        filePreview.appendChild(item);
+                <button
+                    type="button"
+                    class="remove-image"
+                    aria-label="Remove ${esc(file.name)}"
+                    title="Remove image"
+                >×</button>
+            </div>
+
+            <div class="preview-meta">
+                <span class="preview-filename">
+                    ${esc(file.name)}
+                </span>
+
+                <span class="preview-size">
+                    ${(file.size / (1024 * 1024)).toFixed(2)} MB
+                </span>
+            </div>
+        `;
+
+        const image = card.querySelector("img");
+
+        image.addEventListener("load", () => {
+            URL.revokeObjectURL(imageURL);
+        });
+
+        image.addEventListener("error", () => {
+            URL.revokeObjectURL(imageURL);
+        });
+
+        card.querySelector(".remove-image").addEventListener(
+            "click",
+            () => {
+                selectedFiles.splice(index, 1);
+                syncInput();
+                renderPreviews();
+            }
+        );
+
+        previewGrid.appendChild(card);
     });
 }
 
-input.addEventListener("change", updateFiles);
+// ---------- Add selected images ----------
 
+function addFiles(fileList) {
+    const incoming = Array.from(fileList);
 
-/* Drag and drop */
+    const invalid = incoming.filter(file => !validFile(file));
+
+    if (invalid.length) {
+        showToast("Use JPG, PNG, or WEBP images only.");
+    }
+
+    const valid = incoming.filter(validFile);
+
+    let added = 0;
+
+    valid.forEach(file => {
+        const duplicate = selectedFiles.some(existing =>
+            existing.name === file.name &&
+            existing.size === file.size &&
+            existing.lastModified === file.lastModified
+        );
+
+        if (!duplicate) {
+            selectedFiles.push(file);
+            added++;
+        }
+    });
+
+    if (added < valid.length) {
+        showToast("Duplicate images were skipped.");
+    }
+
+    syncInput();
+    renderPreviews();
+}
+
+input.addEventListener("change", event => {
+    addFiles(event.target.files);
+});
+
+// ---------- Drag and drop ----------
 
 ["dragenter", "dragover"].forEach(eventName => {
     drop.addEventListener(eventName, event => {
@@ -115,196 +198,248 @@ input.addEventListener("change", updateFiles);
 });
 
 drop.addEventListener("drop", event => {
-    const files = Array.from(event.dataTransfer.files);
-
-    if (!files.length) {
-        return;
-    }
-
-    const allowedExtensions = /\.(jpe?g|png|webp)$/i;
-
-    const validFiles = files.filter(file => {
-        return allowedExtensions.test(file.name);
-    });
-
-    if (!validFiles.length) {
-        showToast("Choose JPG, PNG, or WEBP images.");
-        return;
-    }
-
-    const transfer = new DataTransfer();
-
-    validFiles.forEach(file => transfer.items.add(file));
-
-    input.files = transfer.files;
-
-    updateFiles();
-
-    if (validFiles.length !== files.length) {
-        showToast("Some unsupported files were skipped.");
-    }
+    addFiles(event.dataTransfer.files);
 });
 
+// ---------- Scanning animation ----------
 
-/* Button states */
+function showScanning() {
+    empty.style.display = "none";
 
-function setAnalyzing(isAnalyzing) {
-    btn.disabled = isAnalyzing;
+    results.innerHTML = `
+        <div class="scanning-card">
+            <div class="scanner-visual">
+                <div class="scanner-ring ring-one"></div>
+                <div class="scanner-ring ring-two"></div>
+                <div class="scanner-ring ring-three"></div>
 
-    if (isAnalyzing) {
-        btn.innerHTML = `
-            <span class="button-content">
-                <span class="button-icon">◌</span>
-                Analyzing images...
-            </span>
-            <span class="button-arrow">↻</span>
-        `;
+                <div class="scanner-core">N</div>
+                <div class="scanner-beam"></div>
+            </div>
 
-        analysisStatus.textContent =
-            "Processing images with the classification model...";
+            <div class="scanner-status">
+                <span class="status-dot"></span>
+                NEURAL PROCESSING ACTIVE
+            </div>
 
-        analysisStatus.classList.add("active");
-    } else {
-        btn.innerHTML = `
-            <span class="button-content">
-                <span class="button-icon">✳</span>
-                Analyze images
-            </span>
-            <span class="button-arrow">↗</span>
-        `;
+            <h3>Analyzing MRI image</h3>
 
-        analysisStatus.classList.remove("active");
-        analysisStatus.textContent = "";
-    }
+            <p class="scanner-description">
+                Processing the selected image through the
+                classification model.
+            </p>
+
+            <div class="scan-progress">
+                <span></span>
+            </div>
+
+            <div class="scanner-foot">
+                <span>IMAGE INFERENCE</span>
+                <span class="scan-live">PROCESSING</span>
+            </div>
+        </div>
+    `;
 }
 
+// ---------- Safe numeric formatting ----------
 
-/* Render prediction results */
+function numericValue(value) {
+    const number = Number(value);
 
-function renderResults(items) {
-    results.replaceChildren();
+    return Number.isFinite(number) ? number : 0;
+}
 
-    if (!items || !items.length) {
+function formatScore(value) {
+    return numericValue(value).toFixed(2);
+}
+
+// ---------- Build prediction cards ----------
+
+function renderResults(data) {
+    const items = Array.isArray(data.results)
+        ? data.results
+        : [];
+
+    if (!items.length) {
+        results.innerHTML = "";
         empty.style.display = "flex";
-        showToast("The model returned no results.");
+        showToast("No prediction results were returned.");
         return;
     }
+
+    results.innerHTML = items.map((item, index) => {
+        if (item.error) {
+            return `
+                <article class="result-card result-error">
+                    <div class="result-card-top">
+                        <span class="result-number">
+                            IMAGE ${(index + 1)
+                                .toString().padStart(2, "0")}
+                        </span>
+
+                        <span class="result-error-badge">
+                            PROCESSING ERROR
+                        </span>
+                    </div>
+
+                    <h3>${esc(item.filename || "Image")}</h3>
+
+                    <p>${esc(item.error)}</p>
+                </article>
+            `;
+        }
+
+        const prediction = String(item.prediction || "Unknown");
+        const confidence = numericValue(item.confidence);
+
+        const scores = Object.entries(item.scores || {})
+            .sort((a, b) => numericValue(b[1]) - numericValue(a[1]));
+
+        const scoreRows = scores.map(([name, value]) => {
+            const score = Math.max(
+                0,
+                Math.min(100, numericValue(value))
+            );
+
+            return `
+                <div class="score-row">
+                    <div class="score-labels">
+                        <span>${esc(name)}</span>
+                        <span>${formatScore(value)}%</span>
+                    </div>
+
+                    <div
+                        class="result-score-track"
+                        role="img"
+                        aria-label="${esc(name)} model score:
+                            ${formatScore(value)} percent"
+                    >
+                        <span
+                            class="result-score-fill"
+                            data-score="${score}"
+                        ></span>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        return `
+            <article class="result-card premium-result">
+                <div class="result-card-top">
+                    <span class="result-number">
+                        ANALYSIS ${(index + 1)
+                            .toString().padStart(2, "0")}
+                    </span>
+
+                    <span class="result-complete">
+                        <span></span>
+                        COMPLETE
+                    </span>
+                </div>
+
+                <div class="result-main">
+                    <div class="result-symbol">N.</div>
+
+                    <div class="result-title">
+                        <span class="result-overline">
+                            PREDICTED CATEGORY
+                        </span>
+
+                        <h3>${esc(prediction)}</h3>
+
+                        <p class="result-filename">
+                            ${esc(item.filename || "Uploaded MRI image")}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="result-highlight">
+                    <div>
+                        <span class="result-overline">
+                            TOP MODEL SCORE
+                        </span>
+
+                        <p class="result-score-note">
+                            Highest reported class score
+                        </p>
+                    </div>
+
+                    <strong>
+                        ${formatScore(confidence)}<small>%</small>
+                    </strong>
+                </div>
+
+                <div class="result-divider"></div>
+
+                <div class="score-heading">
+                    <div>
+                        <span class="result-overline">
+                            CLASS DISTRIBUTION
+                        </span>
+
+                        <h4>Model output scores</h4>
+                    </div>
+
+                    <span class="score-count">
+                        ${scores.length} CLASSES
+                    </span>
+                </div>
+
+                <div class="score-list">
+                    ${scoreRows}
+                </div>
+
+                <div class="result-disclaimer">
+                    <span>ⓘ</span>
+
+                    <p>
+                        Educational output only. Model scores do not
+                        establish a diagnosis or rule out disease.
+                        Consult a qualified medical professional.
+                    </p>
+                </div>
+            </article>
+        `;
+    }).join("");
 
     empty.style.display = "none";
 
-    items.forEach((item, index) => {
-        const card = document.createElement("article");
-        card.className = "result-card";
-        card.style.animationDelay = `${index * 100}ms`;
-
-        if (item.error) {
-            card.innerHTML = `
-                <div class="result-head">
-                    <h3>${esc(item.filename || "Image")}</h3>
-                </div>
-                <p class="disclaimer">${esc(item.error)}</p>
-            `;
-
-            results.appendChild(card);
-            return;
-        }
-
-        const scores = Object.entries(item.scores || {})
-            .sort((a, b) => Number(b[1]) - Number(a[1]));
-
-        const safeScores = scores.map(([name, value]) => {
-            const numericValue = Number(value);
-
-            return [
-                name,
-                Number.isFinite(numericValue)
-                    ? Math.max(0, Math.min(100, numericValue))
-                    : 0
-            ];
-        });
-
-        card.innerHTML = `
-            <div class="result-head">
-                <h3>${esc(item.filename || "Uploaded image")}</h3>
-                <span class="prediction">
-                    ${esc(item.prediction || "Unknown")}
-                </span>
-            </div>
-
-            <div class="confidence">
-                Top model score:
-                <b>${esc(item.confidence)}%</b>
-            </div>
-
-            ${safeScores.map(([name, value]) => `
-                <div class="score">
-                    <div class="scoreline">
-                        <span>${esc(name)}</span>
-                        <span>${value.toFixed(2)}%</span>
-                    </div>
-
-                    <div class="bar">
-                        <span data-score="${value}"></span>
-                    </div>
-                </div>
-            `).join("")}
-
-            <div class="disclaimer">
-                Educational output only. This prediction is not a diagnosis
-                and cannot reliably rule out disease.
-            </div>
-        `;
-
-        results.appendChild(card);
-    });
-
-    /* Animate score bars after the cards are rendered */
-
+    // Animate score bars after the cards have been rendered.
     requestAnimationFrame(() => {
-        results.querySelectorAll(".bar span").forEach((bar, index) => {
-            setTimeout(() => {
-                bar.style.width = `${bar.dataset.score}%`;
-            }, Math.min(index * 45, 350));
-        });
-    });
+        results.querySelectorAll(".result-score-fill")
+            .forEach((bar, index) => {
+                const score = Number(bar.dataset.score) || 0;
 
-    results.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
+                setTimeout(() => {
+                    bar.style.width = `${score}%`;
+                }, 100 + index * 70);
+            });
     });
 }
 
-
-/* Submit images to the existing Flask backend */
+// ---------- Analyze uploaded images ----------
 
 form.addEventListener("submit", async event => {
     event.preventDefault();
 
-    if (!input.files.length) {
-        showToast("Choose an image first.");
-        return;
-    }
-
-    const files = Array.from(input.files);
-    const allowedExtensions = /\.(jpe?g|png|webp)$/i;
-
-    if (files.some(file => !allowedExtensions.test(file.name))) {
-        showToast("Only JPG, PNG, and WEBP images are supported.");
+    if (!selectedFiles.length) {
+        showToast("Choose an MRI image first.");
         return;
     }
 
     const data = new FormData();
 
-    files.forEach(file => {
+    selectedFiles.forEach(file => {
         data.append("images", file);
     });
 
-    latestResults = [];
+    btn.disabled = true;
+    btn.innerHTML = `
+        <span>Analyzing images...</span>
+        <span class="button-spinner">↻</span>
+    `;
 
-    results.replaceChildren();
-    empty.style.display = "none";
-
-    setAnalyzing(true);
+    showScanning();
 
     try {
         const response = await fetch("/predict", {
@@ -316,157 +451,31 @@ form.addEventListener("submit", async event => {
 
         if (!response.ok) {
             throw new Error(
-                result.error || "The prediction request failed."
+                result.error || "Prediction request failed."
             );
         }
 
-        if (!Array.isArray(result.results)) {
-            throw new Error("The server returned an unexpected response.");
+        renderResults(result);
+
+        if (result.results?.some(item => item.error)) {
+            showToast("Some images could not be processed.");
         }
-
-        latestResults = result.results;
-
-        renderResults(latestResults);
-
-        showToast("Analysis finished.");
-
     } catch (error) {
+        results.innerHTML = "";
         empty.style.display = "flex";
 
         showToast(
-            error.message || "Something went wrong during analysis."
+            error.message || "Unable to connect to the server."
         );
-
     } finally {
-        setAnalyzing(false);
+        btn.disabled = false;
+        btn.innerHTML = `
+            <span>Analyze image</span>
+            <span>→</span>
+        `;
     }
 });
 
+// ---------- Initial state ----------
 
-/* Download the latest results as a CSV report */
-
-function downloadReport() {
-    if (!latestResults.length) {
-        showToast("Analyze an image before downloading a report.");
-        return;
-    }
-
-    const rows = [
-        [
-            "Filename",
-            "Predicted category",
-            "Top model score (%)",
-            "Class",
-            "Model score (%)",
-            "Notice"
-        ]
-    ];
-
-    latestResults.forEach(item => {
-        if (item.error) {
-            rows.push([
-                item.filename || "",
-                "Error",
-                "",
-                "",
-                "",
-                item.error
-            ]);
-
-            return;
-        }
-
-        const scores = Object.entries(item.scores || {});
-
-        if (!scores.length) {
-            rows.push([
-                item.filename || "",
-                item.prediction || "",
-                item.confidence ?? "",
-                "",
-                "",
-                "Educational output only; not a medical diagnosis."
-            ]);
-
-            return;
-        }
-
-        scores.forEach(([className, score]) => {
-            rows.push([
-                item.filename || "",
-                item.prediction || "",
-                item.confidence ?? "",
-                className,
-                score,
-                "Educational output only; not a medical diagnosis."
-            ]);
-        });
-    });
-
-    const csv = rows.map(row => {
-        return row.map(value => {
-            const text = String(value ?? "");
-
-            return `"${text.replace(/"/g, '""')}"`;
-        }).join(",");
-    }).join("\r\n");
-
-    const blob = new Blob(
-        ["\uFEFF" + csv],
-        { type: "text/csv;charset=utf-8;" }
-    );
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = "neurolens-results.csv";
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-
-    showToast("Results report downloaded.");
-}
-
-
-/* Add the report button after results are rendered */
-
-const originalRenderResults = renderResults;
-
-renderResults = function(items) {
-    originalRenderResults(items);
-
-    if (!items || !items.length) {
-        return;
-    }
-
-    if (!document.getElementById("downloadReportBtn")) {
-        const reportButton = document.createElement("button");
-
-        reportButton.id = "downloadReportBtn";
-        reportButton.type = "button";
-        reportButton.className = "primary report-button";
-
-        reportButton.style.marginTop = "14px";
-
-        reportButton.innerHTML = `
-            <span class="button-content">
-                <span class="button-icon">↓</span>
-                Download results report
-            </span>
-            <span class="button-arrow">↗</span>
-        `;
-
-        reportButton.addEventListener("click", downloadReport);
-
-        results.appendChild(reportButton);
-    }
-};
-
-
-/* Clean up preview URLs when leaving the page */
-
-window.addEventListener("beforeunload", clearPreviews);
+renderPreviews();

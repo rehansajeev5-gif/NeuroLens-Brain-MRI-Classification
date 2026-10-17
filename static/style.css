@@ -1947,3 +1947,646 @@ label {
         transition-duration: 0.01ms !important;
     }
 }
+/* ==========================================
+   NEUROLENS — IMAGE PREVIEWS
+========================================== */
+
+.preview-grid {
+    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 6px 0 18px;
+}
+
+.preview-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    background: #0b131e;
+    animation: previewEnter 0.35s ease both;
+    transition: border-color 0.25s, transform 0.25s;
+}
+
+.preview-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--mint);
+}
+
+.preview-image-wrap {
+    height: 130px;
+    position: relative;
+    overflow: hidden;
+    background: #07101a;
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.35s;
+}
+
+.preview-card:hover .preview-image {
+    transform: scale(1.05);
+}
+
+.preview-index {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    padding: 5px 8px;
+    border: 1px solid #ffffff25;
+    border-radius: 6px;
+    background: #07101acc;
+    color: var(--mint);
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.remove-image {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 27px;
+    height: 27px;
+    border: 1px solid #ffffff25;
+    border-radius: 8px;
+    background: #111a26e8;
+    color: white;
+    font-size: 19px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.remove-image:hover {
+    background: #a93645;
+    transform: scale(1.08);
+}
+
+.preview-meta {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.preview-filename {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+    color: var(--text);
+}
+
+.preview-size {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   ANALYSIS / SCANNING ANIMATION
+========================================== */
+
+.scanning-card {
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 24px 10px;
+    animation: previewEnter 0.4s ease both;
+}
+
+.scanner-visual {
+    position: relative;
+    width: 145px;
+    height: 145px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 24px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        #173a3b 0%,
+        #10212e 48%,
+        #0b131e 75%
+    );
+    border: 1px solid #83f0c433;
+    overflow: hidden;
+}
+
+.scanner-ring {
+    position: absolute;
+    border: 1px solid #83f0c455;
+    border-radius: 50%;
+}
+
+.ring-one {
+    width: 120px;
+    height: 120px;
+    animation: scannerSpin 8s linear infinite;
+    border-top-color: var(--mint);
+}
+
+.ring-two {
+    width: 95px;
+    height: 95px;
+    border-style: dashed;
+    animation: scannerSpin 12s linear infinite reverse;
+}
+
+.ring-three {
+    width: 65px;
+    height: 65px;
+    border-color: #8ba9ff77;
+    animation: scannerPulse 1.7s ease-in-out infinite;
+}
+
+.scanner-core {
+    z-index: 2;
+    font-size: 36px;
+    font-weight: 850;
+    color: var(--mint);
+    text-shadow: 0 0 25px #83f0c477;
+}
+
+.scanner-beam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--mint);
+    box-shadow: 0 0 14px var(--mint);
+    animation: beamSweep 2.2s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+.scanner-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--mint);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--mint);
+    box-shadow: 0 0 12px var(--mint);
+    animation: scannerPulse 1s ease-in-out infinite;
+}
+
+.scanning-card h3 {
+    font-size: 21px;
+    margin: 17px 0 8px;
+}
+
+.scanner-description {
+    max-width: 290px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.scan-progress {
+    width: min(100%, 290px);
+    height: 4px;
+    margin-top: 19px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #263345;
+}
+
+.scan-progress span {
+    display: block;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--mint),
+        var(--blue)
+    );
+    box-shadow: 0 0 12px #83f0c477;
+    animation: progressSweep 1.7s ease-in-out infinite alternate;
+}
+
+.scanner-foot {
+    width: min(100%, 290px);
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+.scan-live {
+    color: var(--mint);
+}
+
+
+/* ==========================================
+   PREMIUM PREDICTION RESULT CARDS
+========================================== */
+
+.premium-result {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            ellipse at 100% 0%,
+            #83f0c410,
+            transparent 48%
+        ),
+        linear-gradient(145deg, #142231, #0c141e);
+    animation: resultEnter 0.5s ease both;
+}
+
+.result-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 23px;
+}
+
+.result-number {
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.result-complete {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid #83f0c42e;
+    background: #83f0c40a;
+    border-radius: 30px;
+    padding: 6px 9px;
+    color: var(--mint);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+}
+
+.result-complete span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--mint);
+}
+
+.result-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.result-symbol {
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #83f0c444;
+    border-radius: 17px;
+    background: linear-gradient(145deg, #83f0c420, #8ba9ff15);
+    color: var(--mint);
+    font-size: 25px;
+    font-weight: 850;
+    box-shadow: inset 0 0 20px #83f0c40a;
+}
+
+.result-title {
+    min-width: 0;
+}
+
+.result-overline {
+    display: block;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.result-title h3 {
+    margin: 8px 0 5px;
+    color: var(--mint);
+    font-size: clamp(20px, 3vw, 27px);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    text-transform: capitalize;
+}
+
+.result-filename {
+    margin: 0;
+    color: var(--muted);
+    font-size: 10px;
+    overflow-wrap: anywhere;
+}
+
+.result-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 25px;
+    padding: 17px;
+    border: 1px solid #ffffff10;
+    border-radius: 13px;
+    background: #070f1880;
+}
+
+.result-score-note {
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.5;
+    margin: 7px 0 0;
+}
+
+.result-highlight > strong {
+    flex-shrink: 0;
+    color: var(--mint);
+    font-size: 29px;
+    letter-spacing: -1px;
+}
+
+.result-highlight > strong small {
+    color: var(--mint);
+    font-size: 14px;
+    letter-spacing: 0;
+}
+
+.result-divider {
+    height: 1px;
+    background: #ffffff12;
+    margin: 23px 0;
+}
+
+.score-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 21px;
+}
+
+.score-heading h4 {
+    color: var(--text);
+    font-size: 14px;
+    margin: 7px 0 0;
+}
+
+.score-count {
+    color: var(--muted);
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+.score-row {
+    margin-bottom: 19px;
+}
+
+.score-labels {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 9px;
+    color: #d6e0ec;
+    font-size: 11px;
+    text-transform: capitalize;
+}
+
+.score-labels span:last-child {
+    color: var(--mint);
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+}
+
+.result-score-track {
+    height: 6px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #263647;
+}
+
+.result-score-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+        90deg,
+        #62d9c0,
+        #83f0c4 60%,
+        #a4c5ff
+    );
+    box-shadow: 0 0 12px #83f0c433;
+    transition: width 0.85s cubic-bezier(.2, .8, .2, 1);
+}
+
+.result-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 23px;
+    padding: 13px;
+    border: 1px solid #d8b87920;
+    border-radius: 10px;
+    background: #d8b87908;
+}
+
+.result-disclaimer > span {
+    color: #d8b879;
+    font-size: 14px;
+}
+
+.result-disclaimer p {
+    color: #c0b59d;
+    font-size: 10px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.result-error {
+    border-color: #d8787840;
+    background: #351c2430;
+}
+
+.result-error-badge {
+    color: #ffaaaa;
+    font-size: 9px;
+    letter-spacing: 0.8px;
+}
+
+.result-error h3 {
+    overflow-wrap: anywhere;
+}
+
+.result-error p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   BUTTON LOADING EFFECT
+========================================== */
+
+.button-spinner {
+    display: inline-block;
+    animation: scannerSpin 1.2s linear infinite;
+}
+
+
+/* ==========================================
+   ANIMATION KEYFRAMES
+========================================== */
+
+@keyframes previewEnter {
+    from {
+        opacity: 0;
+        transform: translateY(9px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes resultEnter {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scannerSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes scannerPulse {
+    0%, 100% {
+        opacity: 0.55;
+        transform: scale(0.96);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.04);
+    }
+}
+
+@keyframes beamSweep {
+    0% {
+        transform: translateY(-70px);
+    }
+
+    100% {
+        transform: translateY(70px);
+    }
+}
+
+@keyframes progressSweep {
+    from {
+        transform: translateX(-15%);
+    }
+
+    to {
+        transform: translateX(195%);
+    }
+}
+
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 480px) {
+    .preview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .preview-image-wrap {
+        height: 105px;
+    }
+
+    .premium-result {
+        padding: 17px;
+    }
+
+    .result-highlight {
+        padding: 13px;
+    }
+
+    .result-highlight > strong {
+        font-size: 25px;
+    }
+
+    .result-symbol {
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        font-size: 21px;
+    }
+
+    .scanner-visual {
+        width: 125px;
+        height: 125px;
+    }
+
+    .ring-one {
+        width: 105px;
+        height: 105px;
+    }
+}
+
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+    .preview-card,
+    .scanning-card,
+    .premium-result,
+    .scanner-ring,
+    .scanner-beam,
+    .scanner-core,
+    .scanner-status .status-dot,
+    .scan-progress span,
+    .button-spinner {
+        animation: none !important;
+    }
+
+    .result-score-fill,
+    .preview-card,
+    .preview-image,
+    .remove-image {
+        transition: none !important;
+    }
+}
