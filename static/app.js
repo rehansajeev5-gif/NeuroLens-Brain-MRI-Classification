@@ -368,7 +368,54 @@ function renderResults(data) {
                         ${formatScore(confidence)}<small>%</small>
                     </strong>
                 </div>
+<div class="mri-visualization">
+    <div class="mri-visualization-heading">
+        <span class="result-overline">MODEL EXPLAINABILITY</span>
+        <h4>MRI visualization</h4>
+        <p>Compare the original scan with the Grad-CAM overlay.</p>
+    </div>
 
+    <div class="mri-image-grid">
+        <div class="mri-image-card">
+            <span class="mri-image-label">ORIGINAL MRI</span>
+
+            ${
+                item.original_image
+                    ? `<img
+                        src="${esc(item.original_image)}"
+                        alt="Original MRI scan"
+                        class="mri-result-image"
+                        loading="lazy"
+                    >`
+                    : `<p class="mri-image-missing">
+                        Original image unavailable
+                    </p>`
+            }
+        </div>
+
+        <div class="mri-image-card">
+            <span class="mri-image-label">GRAD-CAM OVERLAY</span>
+
+            ${
+                item.heatmap_image
+                    ? `<img
+                        src="${esc(item.heatmap_image)}"
+                        alt="Grad-CAM overlay highlighting image regions influencing the model"
+                        class="mri-result-image"
+                        loading="lazy"
+                    >`
+                    : `<p class="mri-image-missing">
+                        Heatmap unavailable
+                    </p>`
+            }
+        </div>
+    </div>
+
+    <p class="mri-heatmap-note">
+        The overlay highlights regions influencing the model's output.
+        It is not a tumor boundary or a medical diagnosis.
+    </p>
+</div>            
                 <div class="result-divider"></div>
 
                 <div class="score-heading">
