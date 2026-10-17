@@ -370,6 +370,8 @@ def predict():
             # PREDICT CLASS
             # ------------------------------------------
 
+            app.logger.info("Starting MRI model inference.")
+
             with torch.no_grad():
                 logits = net(tensor)
 
@@ -377,6 +379,8 @@ def predict():
                     logits,
                     dim=1
                 )[0].cpu().tolist()
+
+            app.logger.info("MRI model inference completed.")
 
             predicted_index = int(
                 max(
@@ -391,6 +395,7 @@ def predict():
                 probabilities[predicted_index] * 100,
                 2
             )
+
 
             # ------------------------------------------
             # DETERMINE STATUS LABEL
