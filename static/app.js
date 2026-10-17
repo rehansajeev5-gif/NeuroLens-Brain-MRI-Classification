@@ -488,41 +488,64 @@ form.addEventListener("submit", async event => {
 
     showScanning();
 
+
+try {
+    const response = await fetch("/predict", {
+        method: "POST",
+        body: data
+    });
+
+    const responseText = await response.text();
+
+    console.log("HTTP Status:", response.status);
+    console.log("Server Response:", responseText);
+
+    let result;
+
     try {
-        const response = await fetch("/predict", {
-            method: "POST",
-            body: data
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(
-                result.error || "Prediction request failed."
-            );
-        }
-
-        renderResults(result);
-
-        if (result.results?.some(item => item.error)) {
-            showToast("Some images could not be processed.");
-        }
-    } catch (error) {
-        results.innerHTML = "";
-        empty.style.display = "flex";
-
-        showToast(
-            error.message || "Unable to connect to the server."
+        result = JSON.parse(responseText);
+    } catch (parseError) {
+        throw new Error(
+            `Invalid server response (HTTP ${response.status}). ` +
+            "Check the browser console for details."
         );
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = `
-            <span>Analyze image</span>
-            <span>→</span>
-        `;
     }
+
+    if (!response.ok) {
+        throw new Error(
+            result.error || `Prediction failed (HTTP ${response.status}).`
+        );
+    }
+
+    renderResults(result);
+
+    if (result.results?.some(item => item.error)) {
+        showToast("Some images could not be processed.");
+    }
+
+} catch (error) {
+    console.error("MRI prediction error:", error);
+
+    results.innerHTML = "";
+    empty.style.display = "flex";
+
+    showToast(
+        error.message || "Unable to connect to the server."
+    );
+
+} finally {
+    btn.disabled = false;
+
+    btn.innerHTML = `
+        <span>Analyze image</span>
+        <span>→</span>
+    `;
+}
 });
 
 // ---------- Initial state ----------
+
+renderPreviews();
+
 
 renderPreviews();

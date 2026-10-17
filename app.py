@@ -324,22 +324,18 @@ def index():
 # PREDICTION API
 # ==================================================
 
+
 @app.route("/predict", methods=["POST"])
 def predict():
 
     if "images" not in request.files:
-        return jsonify(
-            error="Choose at least one image."
-        ), 400
+        return jsonify(error="Choose at least one image."), 400
 
     net = model or load_model()
 
     if net is None:
         return jsonify(
-            error=(
-                "No trained model found. "
-                "Check artifacts/best_model.pt."
-            )
+            error="No trained model found. Check artifacts/best_model.pt."
         ), 503
 
     output = []
@@ -350,26 +346,17 @@ def predict():
             continue
 
         try:
-            # ------------------------------------------
             # READ ORIGINAL MRI
-            # ------------------------------------------
-
             original_image = Image.open(
                 uploaded_file.stream
             ).convert("RGB")
 
-            # ------------------------------------------
             # PREPROCESS IMAGE
-            # ------------------------------------------
-
             tensor = preprocess(
                 original_image
             ).unsqueeze(0).to(device)
 
-            # ------------------------------------------
             # PREDICT CLASS
-            # ------------------------------------------
-
             app.logger.info("Starting MRI model inference.")
 
             with torch.no_grad():
@@ -396,38 +383,27 @@ def predict():
                 2
             )
 
-
-            # ------------------------------------------
             # DETERMINE STATUS LABEL
-            # ------------------------------------------
+            status = get_tumor_status(predicted_class)
 
-            status = get_tumor_status(
-                predicted_class
-            )
-
-            # ------------------------------------------
             # CREATE ORIGINAL MRI PREVIEW
-            # ------------------------------------------
-
             original_preview = original_image.copy()
-
-            original_preview.thumbnail(
-                (512, 512)
-            )
+            original_preview.thumbnail((512, 512))
 
             original_data_url = image_to_data_url(
                 original_preview
             )
 
-            # ------------------------------------------
             # GENERATE GRAD-CAM
-            # ------------------------------------------
+            app.logger.info("Starting Grad-CAM generation.")
 
             heatmap = generate_gradcam(
                 net,
                 tensor,
                 predicted_index
             )
+
+            app.logger.info("Grad-CAM generation completed.")
 
             overlay = create_overlay(
                 original_image,
@@ -438,10 +414,7 @@ def predict():
                 overlay
             )
 
-            # ------------------------------------------
             # CLASS DISTRIBUTION
-            # ------------------------------------------
-
             scores = {
                 CLASSES[i]: round(
                     probabilities[i] * 100,
@@ -450,27 +423,16 @@ def predict():
                 for i in range(len(CLASSES))
             }
 
-            # ------------------------------------------
-            # RETURN COMPLETE RESULT
-            # ------------------------------------------
-
+            # STORE RESULT
             output.append({
                 "filename": uploaded_file.filename,
-
                 "prediction": predicted_class,
-
                 "confidence": confidence,
-
                 "tumor_status": status["tumor_status"],
-
                 "status_label": status["status_label"],
-
                 "status_type": status["status_type"],
-
                 "scores": scores,
-
                 "original_image": original_data_url,
-
                 "heatmap_image": heatmap_data_url
             })
 
@@ -483,7 +445,7 @@ def predict():
                 "filename": uploaded_file.filename,
                 "error": (
                     "Image processing failed. "
-                    "Check the Flask terminal for details."
+                    "Check the Flask logs for details."
                 )
             })
 
@@ -495,21 +457,4 @@ def predict():
             "A no-tumor-class prediction does not rule out disease."
         )
     )
-
-
-# ==================================================
-# START SERVER
-# ==================================================
-
-if __name__ == "__main__":
-
-    if MODEL_PATH.exists():
-        load_model()
-    else:
-        print(
-            "WARNING: Model checkpoint not found:",
-            MODEL_PATH
-        )
-
-    app.run(debug=True)
 
