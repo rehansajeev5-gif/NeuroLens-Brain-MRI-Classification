@@ -458,3 +458,15 @@ def predict():
         )
     )
 
+if __name__ == "__main__":
+    print("Starting NeuroLens...")
+
+    if MODEL_PATH.exists():
+        print("Model checkpoint found:", MODEL_PATH)
+        load_model()
+    else:
+        print("WARNING: Model checkpoint not found:", MODEL_PATH)
+
+    print("Starting Flask server...")
+    app.run(host="127.0.0.1", port=5000, debug=False)
+

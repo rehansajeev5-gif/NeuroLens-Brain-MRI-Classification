@@ -2590,3 +2590,324 @@ label {
         transition: none !important;
     }
 }
+
+/* =========================================================
+   NEUROLENS UI UPGRADE — compact layout + tumor knowledge center
+   Appended overrides intentionally preserve existing app.js hooks.
+========================================================= */
+.navbar { position: sticky; top: 0; min-height: 68px; padding-inline: max(4vw, 22px); }
+.nav-links { display: flex; align-items: center; justify-content: center; gap: clamp(12px, 2vw, 28px); }
+.nav-links a { color: #aab5d3; text-decoration: none; font-size: 12px; font-weight: 600; transition: color .2s ease; }
+.nav-links a:hover { color: var(--cyan); }
+.hero { width: min(1180px, calc(100% - 64px)); min-height: 450px; padding: 48px 0 40px; gap: 30px; }
+.hero h1 { margin-top: 20px; margin-bottom: 18px; }
+.category-strip { margin-top: 30px; }
+.hero-visual { min-height: 350px; }
+.orbit-outer { width: 320px; height: 320px; }
+.orbit-middle { width: 260px; height: 260px; }
+.orbit-inner { width: 205px; height: 205px; }
+.workspace-section, .insights-section { width: min(1180px, calc(100% - 64px)); }
+.workspace-section { padding-top: 14px; }
+.panel { padding: 22px; }
+.dropzone { min-height: 190px; }
+.insights-section { margin-top: 64px; }
+.disclaimer-panel { width: min(1180px, calc(100% - 64px)); margin-top: 30px; }
+.footer { margin-top: 44px; }
+.tumor-guide-section, .workflow-section { width: min(1180px, calc(100% - 64px)); margin: 76px auto 0; }
+.guide-heading { align-items: flex-end; margin-bottom: 22px; }
+.guide-side-note { color: #7f8eaf; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; white-space: nowrap; }
+.tumor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.tumor-card { min-width: 0; padding: 23px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, rgba(20,29,50,.95), rgba(10,15,28,.96)); position: relative; overflow: hidden; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.tumor-card::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--tumor-accent, var(--cyan)); opacity: .8; }
+.tumor-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--tumor-accent, var(--cyan)) 40%, transparent); box-shadow: 0 18px 45px #0003; }
+.tumor-glioma { --tumor-accent: #7af3ff; }
+.tumor-meningioma { --tumor-accent: #b39aff; }
+.tumor-pituitary { --tumor-accent: #f0a6ff; }
+.tumor-normal { --tumor-accent: #83f0c4; }
+.tumor-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tumor-index { color: var(--tumor-accent); font: 700 11px var(--font-display); letter-spacing: 1px; }
+.tumor-tag { padding: 6px 8px; border: 1px solid color-mix(in srgb, var(--tumor-accent) 24%, transparent); border-radius: 6px; color: var(--tumor-accent); font-size: 8px; font-weight: 800; letter-spacing: 1.1px; }
+.tumor-card h3 { margin: 18px 0 9px; font: 600 24px var(--font-display); letter-spacing: -.7px; }
+.tumor-definition { margin: 0; color: #b3bfd9; font-size: 12px; line-height: 1.8; }
+.tumor-detail { margin-top: 18px; padding-top: 15px; border-top: 1px solid rgba(158,177,226,.12); }
+.tumor-detail strong { display: block; margin-bottom: 7px; color: var(--tumor-accent); font-size: 11px; letter-spacing: .2px; }
+.tumor-detail p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+.tumor-detail code { color: var(--mint); }
+.source-note { display: flex; align-items: flex-start; gap: 12px; margin-top: 16px; padding: 15px 17px; border: 1px solid rgba(122,243,255,.14); border-radius: 12px; background: rgba(122,243,255,.035); }
+.source-note > span { color: var(--cyan); font-size: 16px; }
+.source-note p { margin: 0; color: #9ba8c5; font-size: 10px; line-height: 1.8; }
+.source-note strong { color: #d8e4f5; }
+.source-note a { color: var(--cyan); text-underline-offset: 3px; }
+.workflow-section { margin-top: 70px; }
+.workflow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.workflow-card { position: relative; padding: 20px; min-height: 210px; border: 1px solid var(--line); border-radius: 14px; background: rgba(15,22,39,.82); transition: transform .25s ease, border-color .25s ease; }
+.workflow-card:hover { transform: translateY(-4px); border-color: rgba(122,243,255,.28); }
+.workflow-number { position: absolute; top: 17px; right: 17px; color: #71809f; font: 700 10px var(--font-display); letter-spacing: 1px; }
+.workflow-icon { width: 40px; height: 40px; display: grid; place-items: center; margin-bottom: 22px; border: 1px solid rgba(122,243,255,.2); border-radius: 11px; color: var(--cyan); background: rgba(122,243,255,.07); font-size: 22px; }
+.workflow-card h3 { margin: 0 0 9px; font: 600 16px var(--font-display); }
+.workflow-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+@media (max-width: 900px) {
+  .navbar { flex-wrap: wrap; gap: 12px; padding-block: 12px; }
+  .nav-links { order: 3; width: 100%; justify-content: flex-start; padding: 3px 0; }
+  .hero { min-height: auto; padding: 42px 0 25px; }
+  .workflow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tumor-guide-section, .workflow-section { margin-top: 58px; }
+}
+@media (max-width: 680px) {
+  .hero, .workspace-section, .insights-section, .tumor-guide-section, .workflow-section, .disclaimer-panel { width: calc(100% - 32px); }
+  .hero { grid-template-columns: 1fr; padding-top: 36px; }
+  .hero h1 { font-size: clamp(48px, 13vw, 70px); letter-spacing: -3.5px; }
+  .hero-visual { min-height: 285px; margin-top: -8px; }
+  .orbit-outer { width: 260px; height: 260px; }
+  .orbit-middle { width: 215px; height: 215px; }
+  .orbit-inner { width: 165px; height: 165px; }
+  .brain-visual { width: min(240px, 75%); }
+  .label-top { top: 16px; right: 2px; }
+  .label-bottom { bottom: 12px; left: 0; }
+  .workspace-grid, .tumor-grid { grid-template-columns: 1fr; }
+  .section-heading { align-items: flex-start; flex-direction: column; }
+  .guide-heading { gap: 14px; }
+  .workflow-grid { grid-template-columns: 1fr; }
+  .workflow-card { min-height: auto; }
+  .panel { padding: 18px; }
+  .insights-section { margin-top: 48px; }
+  .tumor-card { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tumor-card, .workflow-card, .nav-links a { transition: none !important; }
+  .tumor-card:hover, .workflow-card:hover { transform: none; }
+}
+
+
+/* Scan readiness panel: fills the upload panel's lower whitespace with useful guidance */
+.scan-readiness-card {
+  margin-top: 23px;
+  padding: 18px 17px 14px;
+  border: 1px solid rgba(122,243,255,.15);
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(122,243,255,.065), rgba(158,120,255,.045) 65%, rgba(255,255,255,.018));
+  position: relative;
+  overflow: hidden;
+}
+.scan-readiness-card::after {
+  content: ""; position: absolute; width: 130px; height: 130px; right: -70px; top: -72px;
+  border: 1px solid rgba(122,243,255,.12); border-radius: 50%; pointer-events: none;
+}
+.scan-readiness-heading { display: flex; align-items: center; gap: 11px; margin-bottom: 17px; }
+.readiness-icon { width: 35px; height: 35px; flex: 0 0 35px; display: grid; place-items: center; border: 1px solid rgba(122,243,255,.22); border-radius: 11px; color: var(--cyan); background: rgba(122,243,255,.08); font-size: 17px; }
+.readiness-eyebrow { display: block; margin-bottom: 4px; color: var(--cyan); font-size: 8px; font-weight: 700; letter-spacing: 1.6px; }
+.scan-readiness-heading h4 { margin: 0; color: #edf3ff; font: 600 15px var(--font-display); letter-spacing: -.3px; }
+.readiness-status { margin-left: auto; padding: 6px 8px; border: 1px solid rgba(158,177,226,.14); border-radius: 6px; color: #98a8c8; font-size: 7px; font-weight: 700; letter-spacing: .8px; white-space: nowrap; }
+.readiness-tips { display: grid; gap: 0; }
+.readiness-tip { display: flex; align-items: flex-start; gap: 11px; padding: 12px 0; border-top: 1px solid rgba(158,177,226,.1); }
+.tip-check { width: 25px; height: 25px; flex: 0 0 25px; display: grid; place-items: center; border-radius: 8px; color: #9cecf4; background: rgba(122,243,255,.07); font: 600 9px var(--font-display); }
+.readiness-tip strong { display: block; margin: 1px 0 4px; color: #dce6fa; font-size: 10px; font-weight: 600; }
+.readiness-tip p { margin: 0; color: #8998b7; font-size: 9px; line-height: 1.6; }
+.readiness-footer { display: flex; align-items: center; gap: 8px; margin-top: 7px; padding-top: 12px; border-top: 1px solid rgba(158,177,226,.1); color: #8492b0; font-size: 8px; line-height: 1.5; }
+.readiness-footer b { color: #c8d5ec; font-weight: 600; }
+.readiness-pulse { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: #7af3ff; box-shadow: 0 0 10px rgba(122,243,255,.7); animation: readinessPulse 2s ease-in-out infinite; }
+@keyframes readinessPulse { 0%,100% { opacity: .55; box-shadow: 0 0 4px rgba(122,243,255,.35); } 50% { opacity: 1; box-shadow: 0 0 11px rgba(122,243,255,.8); } }
+@media (max-width: 680px) { .scan-readiness-card { margin-top: 19px; padding: 15px 13px 12px; } .readiness-status { display: none; } }
+@media (prefers-reduced-motion: reduce) { .readiness-pulse { animation: none; } }
+
+/* Detailed report, daily quote and transparency strip */
+.report-hub { width: min(1180px, calc(100% - 64px)); margin: 64px auto 0; }
+.report-hub-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:22px; }
+.report-hub-heading h2 { margin:12px 0 10px; font:600 clamp(30px,4vw,43px)/1.1 var(--font-display); letter-spacing:-1.8px; }
+.report-hub-heading h2 span { color:var(--cyan); }
+.report-hub-heading p { max-width:640px; margin:0; color:var(--muted); font-size:12px; line-height:1.8; }
+.report-heading-badge { display:flex; align-items:center; gap:9px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; color:#aab8d4; font-size:8px; font-weight:800; letter-spacing:1.3px; white-space:nowrap; }
+.report-live-dot { width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 12px #7af3ff88; }
+.report-hub-grid { display:grid; grid-template-columns:minmax(0,1.65fr) minmax(260px,.85fr); gap:17px; align-items:stretch; }
+.detail-report-card,.daily-quote-card { min-width:0; border:1px solid var(--line); border-radius:18px; background:linear-gradient(145deg,rgba(19,28,49,.96),rgba(10,15,28,.98)); box-shadow:0 20px 60px #0002; }
+.detail-report-card { padding:24px; }
+.detail-report-top { display:flex; align-items:center; gap:13px; }
+.report-icon { width:43px; height:43px; display:grid; place-items:center; border:1px solid rgba(122,243,255,.2); border-radius:13px; background:rgba(122,243,255,.07); color:var(--cyan); font-size:22px; }
+.report-overline { display:block; margin-bottom:5px; color:var(--cyan); font-size:8px; font-weight:800; letter-spacing:1.4px; }
+.detail-report-top h3 { margin:0; font:600 19px var(--font-display); }
+.report-status { margin-left:auto; padding:7px 9px; border:1px solid rgba(158,177,226,.17); border-radius:6px; color:#9ca9c3; font-size:7px; font-weight:800; letter-spacing:.8px; white-space:nowrap; }
+.report-status.is-ready { border-color:#83f0c444; color:#83f0c4; background:#83f0c40c; }
+.report-intro { margin:18px 0 15px; color:#98a7c5; font-size:11px; line-height:1.8; }
+.report-fields { border-top:1px solid rgba(158,177,226,.12); }
+.report-field { display:flex; align-items:flex-start; gap:13px; padding:14px 0; border-bottom:1px solid rgba(158,177,226,.1); }
+.report-field>span { display:grid; place-items:center; width:27px; height:27px; flex:0 0 27px; border-radius:8px; color:var(--cyan); background:rgba(122,243,255,.07); font:700 9px var(--font-display); }
+.report-field strong { display:block; margin:1px 0 5px; color:#e0e8f8; font-size:11px; font-weight:600; }
+.report-field p { margin:0; color:#8e9dbb; font-size:10px; line-height:1.7; overflow-wrap:anywhere; }
+.report-actions { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:18px; }
+.report-print-button { display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border:1px solid rgba(122,243,255,.3); border-radius:9px; background:linear-gradient(100deg,rgba(122,243,255,.15),rgba(158,120,255,.13)); color:#e8faff; font:600 11px var(--font-display); cursor:pointer; transition:transform .2s ease,border-color .2s ease,background .2s ease; }
+.report-print-button:hover { transform:translateY(-2px); border-color:var(--cyan); background:rgba(122,243,255,.17); }
+.report-actions>span,.report-note { color:#7f8eac; font-size:9px; line-height:1.7; }
+.report-note { margin:15px 0 0; }
+.daily-quote-card { position:relative; overflow:hidden; padding:24px; display:flex; flex-direction:column; background:radial-gradient(ellipse at 100% 0%,rgba(158,120,255,.18),transparent 55%),linear-gradient(145deg,rgba(20,28,49,.98),rgba(10,15,28,.98)); }
+.daily-quote-card::after { content:""; position:absolute; width:190px; height:190px; right:-115px; bottom:-115px; border:1px solid rgba(158,120,255,.2); border-radius:50%; box-shadow:0 0 0 20px rgba(158,120,255,.025),0 0 0 40px rgba(158,120,255,.02); pointer-events:none; }
+.quote-card-top { display:flex; align-items:center; gap:8px; color:#b3a1ff; font-size:8px; font-weight:800; letter-spacing:1.3px; }
+.quote-spark { font-size:17px; }
+.quote-date { margin-left:auto; color:#8391af; font-size:8px; letter-spacing:1px; }
+.quote-mark { height:52px; margin-top:22px; color:#b3a1ff; font:700 76px/1 Georgia,serif; opacity:.75; }
+.daily-quote-text { position:relative; z-index:1; margin:0; color:#f0f2ff; font:500 clamp(19px,2vw,25px)/1.45 var(--font-display); letter-spacing:-.6px; }
+.quote-divider { display:flex; gap:5px; margin:23px 0 15px; }
+.quote-divider span { width:20px; height:3px; border-radius:5px; background:#b3a1ff; opacity:.85; }
+.quote-divider span:nth-child(2) { width:9px; opacity:.5; }
+.quote-divider span:nth-child(3) { width:5px; opacity:.3; }
+.quote-caption { margin:0 0 24px; color:#8f9cba; font-size:10px; line-height:1.8; }
+.quote-refresh { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding:11px 0 0; border:0; border-top:1px solid rgba(158,177,226,.13); background:transparent; color:#c3b7ff; font:600 10px var(--font-display); text-align:left; cursor:pointer; }
+.quote-refresh span { font-size:17px; }
+.insight-strip { display:flex; align-items:center; gap:14px; margin-top:17px; padding:17px 20px; border:1px solid rgba(122,243,255,.13); border-radius:13px; background:rgba(122,243,255,.035); }
+.insight-strip-icon { width:35px; height:35px; flex:0 0 35px; display:grid; place-items:center; border:1px solid rgba(122,243,255,.18); border-radius:11px; color:var(--cyan); font-size:20px; }
+.insight-strip strong { display:block; margin-bottom:5px; color:#dce6fa; font-size:11px; }
+.insight-strip p { margin:0; color:#8e9dbb; font-size:10px; line-height:1.7; }
+.insight-strip-label { margin-left:auto; color:#7b8ba9; font-size:7px; font-weight:800; letter-spacing:1.2px; white-space:nowrap; }
+#printableReportText { display:none; }
+@media (max-width:850px) { .report-hub-grid { grid-template-columns:1fr; } .daily-quote-card { min-height:290px; } }
+@media (max-width:680px) { .report-hub { width:calc(100% - 32px); margin-top:48px; } .report-hub-heading { align-items:flex-start; flex-direction:column; gap:14px; } .detail-report-card,.daily-quote-card { padding:18px; } .report-status { display:none; } .insight-strip { align-items:flex-start; padding:15px; } .insight-strip-label { display:none; } }
+@media print {
+  body.printing-neurolens-report > *:not(#printableReportText) { display:none !important; }
+  body.printing-neurolens-report #printableReportText { display:block !important; max-width:800px; margin:0 auto; padding:25px; color:#182033; background:white; font-family:Arial,sans-serif; }
+  #printableReportText .print-brand { color:#17213b; font-size:28px; font-weight:800; letter-spacing:-1px; }
+  #printableReportText .print-brand span { color:#159ab1; }
+  #printableReportText .print-report-header>p { color:#23899a; font-size:10px; font-weight:700; letter-spacing:2px; }
+  #printableReportText h1 { margin:20px 0 8px; font-size:28px; }
+  #printableReportText h2 { margin-top:25px; font-size:16px; }
+  #printableReportText .print-meta { color:#65718a; font-size:11px; }
+  #printableReportText pre { white-space:pre-wrap; overflow-wrap:anywhere; padding:15px; border:1px solid #d7deea; border-radius:8px; font:12px/1.7 Arial,sans-serif; }
+  #printableReportText>p { font-size:12px; line-height:1.7; }
+}
+
+
+/* V2 polish: animated headline cursor and workflow panel above scan readiness */
+.hero-headline { position: relative; width: fit-content; max-width: 100%; }
+.hero-heading-cursor { display: inline-block; width: 3px; height: .78em; margin-left: 9px; vertical-align: -.02em; border-radius: 2px; background: var(--cyan); box-shadow: 0 0 13px rgba(122,243,255,.72); animation: heroCursorBlink 1s steps(2, start) infinite; }
+.hero-title-rule { display: block; width: min(180px, 48%); height: 3px; margin: -8px 0 24px; border-radius: 99px; background: linear-gradient(90deg, var(--cyan), #9bb6ff 65%, transparent); transform-origin: left; animation: titleRuleReveal .85s .25s both; }
+@keyframes heroCursorBlink { 0%, 48% { opacity: 1; } 49%, 100% { opacity: 0; } }
+@keyframes titleRuleReveal { from { transform: scaleX(.08); opacity: .2; } to { transform: scaleX(1); opacity: 1; } }
+.analysis-pipeline { position: relative; overflow: hidden; margin: 20px 0 19px; padding: 18px 18px 13px; border: 1px solid rgba(122,243,255,.17); border-radius: 15px; background: linear-gradient(135deg, rgba(20,31,56,.9), rgba(12,17,33,.94)); box-shadow: inset 0 1px 0 rgba(255,255,255,.025); }
+.analysis-pipeline::before { content: ''; position: absolute; top: 0; left: 18px; width: 76px; height: 1px; background: var(--cyan); box-shadow: 0 0 14px rgba(122,243,255,.8); }
+.pipeline-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.pipeline-orbit { display: grid; place-items: center; width: 32px; height: 32px; flex: 0 0 32px; border-radius: 10px; color: var(--cyan); background: rgba(122,243,255,.08); border: 1px solid rgba(122,243,255,.18); }
+.pipeline-kicker { display: block; margin-bottom: 3px; color: var(--cyan); font-size: 8px; font-weight: 700; letter-spacing: 1.7px; }
+.pipeline-heading strong { display: block; color: #edf3ff; font: 600 14px var(--font-display); letter-spacing: -.25px; }
+.pipeline-live { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; color: #9eb0cc; font-size: 8px; font-weight: 700; letter-spacing: 1px; }
+.pipeline-live i { width: 6px; height: 6px; border-radius: 50%; background: #7cf4bd; box-shadow: 0 0 8px rgba(124,244,189,.6); }
+.pipeline-steps { display: grid; grid-template-columns: 1fr 15px 1fr 15px 1fr; align-items: center; gap: 7px; }
+.pipeline-step { position: relative; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; padding: 11px 10px 10px; border: 1px solid rgba(158,177,226,.11); border-radius: 10px; background: rgba(255,255,255,.018); }
+.pipeline-number { color: #7585a6; font-size: 8px; font-weight: 700; letter-spacing: 1px; }
+.pipeline-symbol { margin: 7px 0 8px; color: var(--cyan); font-size: 18px; line-height: 1; }
+.pipeline-step strong { color: #e4edff; font-size: 10px; font-weight: 700; }
+.pipeline-step small { margin-top: 4px; color: #8c9bbb; font-size: 8px; line-height: 1.45; }
+.pipeline-connector { display: block; width: 100%; height: 1px; background: linear-gradient(90deg, rgba(122,243,255,.2), rgba(122,243,255,.75)); }
+.pipeline-footnote { margin: 12px 0 0; color: #8291af; font-size: 8px; line-height: 1.5; }
+@media (max-width: 520px) { .analysis-pipeline { padding: 15px 12px 12px; } .pipeline-steps { grid-template-columns: 1fr; gap: 7px; } .pipeline-connector { width: 1px; height: 10px; margin-left: 17px; background: linear-gradient(180deg, rgba(122,243,255,.2), rgba(122,243,255,.75)); } .pipeline-step { display: grid; grid-template-columns: 24px 22px 1fr; align-items: center; column-gap: 8px; padding: 9px; } .pipeline-number { grid-row: span 2; } .pipeline-symbol { grid-row: span 2; margin: 0; } .pipeline-step strong { align-self: end; } .pipeline-step small { align-self: start; margin-top: 2px; } .hero-title-rule { margin-bottom: 20px; } }
+@media (prefers-reduced-motion: reduce) { .hero-heading-cursor { animation: none; opacity: 1; } .hero-title-rule { animation: none; } }
+
+
+/* =========================================================
+   NEUROLENS V3 — FULL-WIDTH HORIZONTAL ANALYSIS RESULTS
+   When a prediction is present, results span the entire workspace
+   instead of leaving an unused column beside the heatmap.
+========================================================= */
+.workspace-grid:has(#results .premium-result) {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.workspace-grid:has(#results .premium-result) #resultsPanel {
+    grid-column: 1 / -1;
+    min-width: 0;
+}
+
+/* Lay out the result summary, confidence, class scores and scan visuals
+   in broad horizontal bands. Keep the original content and IDs intact. */
+#results .premium-result {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+}
+
+#results .premium-result > .result-card-top,
+#results .premium-result > .result-divider,
+#results .premium-result > .score-heading,
+#results .premium-result > .result-disclaimer,
+#results .premium-result > .preview-grid,
+#results .premium-result > .scanner-visual,
+#results .premium-result > .scanner-foot {
+    grid-column: 1 / -1;
+}
+
+#results .premium-result > .result-main,
+#results .premium-result > .result-highlight {
+    min-width: 0;
+    margin-top: 0;
+}
+
+#results .premium-result .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    min-width: 0;
+}
+
+#results .premium-result img,
+#results .premium-result canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+#results .premium-result .preview-card {
+    min-width: 0;
+}
+
+/* Keep score rows side by side on wide screens instead of a tall narrow stack. */
+#results .premium-result .score-row {
+    min-width: 0;
+    margin-bottom: 8px;
+}
+
+/* Reduce costly perpetual motion and oversized effects that can make laptops
+   feel sluggish; the page remains styled but uses simpler static decoration. */
+.ambient {
+    animation: none !important;
+}
+.panel,
+.info-card,
+.tumor-card,
+.workflow-card {
+    transition: border-color .18s ease, background-color .18s ease !important;
+}
+.panel:hover,
+.info-card:hover,
+.tumor-card:hover,
+.workflow-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+#results .premium-result,
+#results .result-card,
+#results .result-score-fill,
+#results .bar span {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (max-width: 760px) {
+    #results .premium-result {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    #results .premium-result > .result-card-top,
+    #results .premium-result > .result-divider,
+    #results .premium-result > .score-heading,
+    #results .premium-result > .result-disclaimer,
+    #results .premium-result > .preview-grid,
+    #results .premium-result > .scanner-visual,
+    #results .premium-result > .scanner-foot {
+        grid-column: 1;
+    }
+    #results .premium-result .preview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    #results .premium-result .preview-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

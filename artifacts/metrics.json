@@ -1,0 +1,206 @@
+{
+  "mobilenet_v3_small": {
+    "accuracy": 0.93625,
+    "classification_report": {
+      "glioma": {
+        "precision": 0.9814241486068112,
+        "recall": 0.7925,
+        "f1-score": 0.8769017980636238,
+        "support": 400.0
+      },
+      "meningioma": {
+        "precision": 0.9002320185614849,
+        "recall": 0.97,
+        "f1-score": 0.9338146811070999,
+        "support": 400.0
+      },
+      "notumor": {
+        "precision": 0.9018264840182648,
+        "recall": 0.9875,
+        "f1-score": 0.9427207637231504,
+        "support": 400.0
+      },
+      "pituitary": {
+        "precision": 0.9754901960784313,
+        "recall": 0.995,
+        "f1-score": 0.9851485148514851,
+        "support": 400.0
+      },
+      "accuracy": 0.93625,
+      "macro avg": {
+        "precision": 0.9397432118162481,
+        "recall": 0.93625,
+        "f1-score": 0.9346464394363398,
+        "support": 1600.0
+      },
+      "weighted avg": {
+        "precision": 0.9397432118162482,
+        "recall": 0.93625,
+        "f1-score": 0.9346464394363397,
+        "support": 1600.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        317,
+        41,
+        38,
+        4
+      ],
+      [
+        1,
+        388,
+        5,
+        6
+      ],
+      [
+        5,
+        0,
+        395,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        398
+      ]
+    ]
+  },
+  "resnet18": {
+    "accuracy": 0.95375,
+    "classification_report": {
+      "glioma": {
+        "precision": 0.9970059880239521,
+        "recall": 0.8325,
+        "f1-score": 0.9073569482288828,
+        "support": 400.0
+      },
+      "meningioma": {
+        "precision": 0.8859060402684564,
+        "recall": 0.99,
+        "f1-score": 0.935064935064935,
+        "support": 400.0
+      },
+      "notumor": {
+        "precision": 0.9569377990430622,
+        "recall": 1.0,
+        "f1-score": 0.9779951100244498,
+        "support": 400.0
+      },
+      "pituitary": {
+        "precision": 0.9900249376558603,
+        "recall": 0.9925,
+        "f1-score": 0.9912609238451935,
+        "support": 400.0
+      },
+      "accuracy": 0.95375,
+      "macro avg": {
+        "precision": 0.9574686912478327,
+        "recall": 0.95375,
+        "f1-score": 0.9529194792908653,
+        "support": 1600.0
+      },
+      "weighted avg": {
+        "precision": 0.9574686912478327,
+        "recall": 0.95375,
+        "f1-score": 0.9529194792908652,
+        "support": 1600.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        333,
+        49,
+        18,
+        0
+      ],
+      [
+        0,
+        396,
+        0,
+        4
+      ],
+      [
+        0,
+        0,
+        400,
+        0
+      ],
+      [
+        1,
+        2,
+        0,
+        397
+      ]
+    ]
+  },
+  "efficientnet_b0": {
+    "accuracy": 0.946875,
+    "classification_report": {
+      "glioma": {
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1-score": 0.8888888888888888,
+        "support": 400.0
+      },
+      "meningioma": {
+        "precision": 0.8747252747252747,
+        "recall": 0.995,
+        "f1-score": 0.9309941520467836,
+        "support": 400.0
+      },
+      "notumor": {
+        "precision": 0.9433962264150944,
+        "recall": 1.0,
+        "f1-score": 0.970873786407767,
+        "support": 400.0
+      },
+      "pituitary": {
+        "precision": 0.9900249376558603,
+        "recall": 0.9925,
+        "f1-score": 0.9912609238451935,
+        "support": 400.0
+      },
+      "accuracy": 0.946875,
+      "macro avg": {
+        "precision": 0.9520366096990573,
+        "recall": 0.946875,
+        "f1-score": 0.9455044377971582,
+        "support": 1600.0
+      },
+      "weighted avg": {
+        "precision": 0.9520366096990575,
+        "recall": 0.946875,
+        "f1-score": 0.9455044377971583,
+        "support": 1600.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        320,
+        54,
+        24,
+        2
+      ],
+      [
+        0,
+        398,
+        0,
+        2
+      ],
+      [
+        0,
+        0,
+        400,
+        0
+      ],
+      [
+        0,
+        3,
+        0,
+        397
+      ]
+    ]
+  }
+}

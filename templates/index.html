@@ -57,9 +57,10 @@
 
         </a>
 
-        <div class="nav-center">
-            <span class="status-dot"></span>
-            AI IMAGING WORKSPACE
+        <div class="nav-links" aria-label="Main navigation">
+            <a href="#workspace">AI Workspace</a>
+            <a href="#tumor-guide">Tumor Guide</a>
+            <a href="#workflow">How It Works</a>
         </div>
 
         <a class="github-link"
@@ -87,15 +88,17 @@
                     COMPUTER VISION / MEDICAL IMAGING
                 </div>
 
-                <h1>
+                <h1 class="hero-headline">
                     See beyond<br>
-                    the <span class="gradient-text">image.</span>
+                    the <span class="gradient-text">image.</span><span class="hero-heading-cursor" aria-hidden="true"></span>
                 </h1>
+                <span class="hero-title-rule" aria-hidden="true"></span>
 
                 <p class="hero-description">
-                    Explore brain MRI classification through machine learning.
-                    Upload an image, run your model, and inspect its predicted
-                    category and class scores.
+                    An educational brain-MRI classification project powered by a
+                    trained deep-learning model. Explore four dataset labels,
+                    compare model scores, and inspect a Grad-CAM visualisation
+                    of image regions that influenced the prediction.
                 </p>
 
                 <div class="hero-actions">
@@ -437,6 +440,48 @@
                             Use supported image files only.
                         </p>
 
+                        <div class="analysis-pipeline" aria-label="Three steps in the analysis workflow">
+                            <div class="pipeline-heading">
+                                <span class="pipeline-orbit" aria-hidden="true">✳</span>
+                                <div><span class="pipeline-kicker">YOUR WORKFLOW</span><strong>From scan to insight</strong></div>
+                                <span class="pipeline-live"><i></i> READY</span>
+                            </div>
+                            <div class="pipeline-steps">
+                                <div class="pipeline-step"><span class="pipeline-number">01</span><span class="pipeline-symbol" aria-hidden="true">↥</span><strong>Upload</strong><small>Add an MRI image</small></div>
+                                <span class="pipeline-connector" aria-hidden="true"></span>
+                                <div class="pipeline-step"><span class="pipeline-number">02</span><span class="pipeline-symbol" aria-hidden="true">⌘</span><strong>Analyze</strong><small>Model evaluates it</small></div>
+                                <span class="pipeline-connector" aria-hidden="true"></span>
+                                <div class="pipeline-step"><span class="pipeline-number">03</span><span class="pipeline-symbol" aria-hidden="true">▤</span><strong>Review</strong><small>Explore the output</small></div>
+                            </div>
+                            <p class="pipeline-footnote">A transparent look at the steps in this educational AI demo.</p>
+                        </div>
+
+                        <div class="scan-readiness-card">
+                            <div class="scan-readiness-heading">
+                                <span class="readiness-icon">✦</span>
+                                <div>
+                                    <span class="readiness-eyebrow">BEFORE YOU ANALYZE</span>
+                                    <h4>Make your scan ready</h4>
+                                </div>
+                                <span class="readiness-status">3 QUICK TIPS</span>
+                            </div>
+                            <div class="readiness-tips">
+                                <div class="readiness-tip">
+                                    <span class="tip-check">01</span>
+                                    <div><strong>Use a clear image</strong><p>Avoid blurry or heavily cropped scans.</p></div>
+                                </div>
+                                <div class="readiness-tip">
+                                    <span class="tip-check">02</span>
+                                    <div><strong>Check the file format</strong><p>JPG, PNG, and WEBP are supported.</p></div>
+                                </div>
+                                <div class="readiness-tip">
+                                    <span class="tip-check">03</span>
+                                    <div><strong>Review the result carefully</strong><p>This AI demo is educational, not a diagnosis.</p></div>
+                                </div>
+                            </div>
+                            <div class="readiness-footer"><span class="readiness-pulse"></span> Your analysis starts when you select <b>Analyze images</b>.</div>
+                        </div>
+
                     </form>
 
                 </section>
@@ -542,6 +587,57 @@
         </section>
 
 
+        <!-- Detailed report and daily inspiration -->
+        <section class="report-hub" id="report-hub" aria-labelledby="report-hub-title">
+            <div class="report-hub-heading">
+                <div>
+                    <div class="section-kicker"><span>03</span> YOUR ANALYSIS, EXPLAINED</div>
+                    <h2 id="report-hub-title">A clearer view of <span>the result.</span></h2>
+                    <p>Turn the model output into a readable project report, then print or save it as a PDF for your records.</p>
+                </div>
+                <div class="report-heading-badge"><span class="report-live-dot"></span> REPORT BUILDER</div>
+            </div>
+
+            <div class="report-hub-grid">
+                <article class="detail-report-card" id="printReportCard">
+                    <div class="detail-report-top">
+                        <div class="report-icon">▤</div>
+                        <div>
+                            <span class="report-overline">NEUROLENS / OUTPUT SUMMARY</span>
+                            <h3>Detailed analysis report</h3>
+                        </div>
+                        <span class="report-status" id="reportStatus">AWAITING ANALYSIS</span>
+                    </div>
+                    <p class="report-intro">Run an MRI image analysis first. This report will capture the visible prediction output and model scores from the results panel.</p>
+                    <div class="report-fields">
+                        <div class="report-field"><span>01</span><div><strong>Predicted dataset label</strong><p id="reportPrediction">Will appear after analysis</p></div></div>
+                        <div class="report-field"><span>02</span><div><strong>Model output and class scores</strong><p id="reportScores">The output summary will be collected from the results panel.</p></div></div>
+                        <div class="report-field"><span>03</span><div><strong>Interpretation reminder</strong><p>This is a machine-learning classification result, not a confirmed diagnosis or a substitute for a radiologist.</p></div></div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="report-print-button" id="printReportBtn" type="button">↗ Prepare & print report</button>
+                        <span>Tip: choose “Save as PDF” in the print dialog.</span>
+                    </div>
+                    <p class="report-note">Report content is copied from the results displayed on this page. It does not add new medical findings or verify the model's prediction.</p>
+                </article>
+
+                <aside class="daily-quote-card" aria-labelledby="dailyQuoteTitle">
+                    <div class="quote-card-top"><span class="quote-spark">✦</span><span>YOUR DAILY RESET</span><span class="quote-date" id="quoteDate"></span></div>
+                    <div class="quote-mark">“</div>
+                    <p class="daily-quote-text" id="dailyQuoteTitle">Great things are built one curious question at a time.</p>
+                    <div class="quote-divider"><span></span><span></span><span></span></div>
+                    <p class="quote-caption">A little reminder to keep learning, experimenting, and improving.</p>
+                    <button class="quote-refresh" id="newQuoteBtn" type="button">Show another quote <span>↻</span></button>
+                </aside>
+            </div>
+
+            <div class="insight-strip">
+                <div class="insight-strip-icon">◎</div>
+                <div><strong>One more thing to remember</strong><p>Model confidence is not the same as clinical certainty. Always interpret results in context, and leave medical decisions to qualified healthcare professionals.</p></div>
+                <span class="insight-strip-label">AI TRANSPARENCY</span>
+            </div>
+        </section>
+
         <!-- Information cards -->
         <section class="insights-section">
 
@@ -549,7 +645,7 @@
 
                 <div>
                     <div class="section-kicker">
-                        <span>03</span>
+                        <span>04</span>
                         INSIDE NEUROLENS
                     </div>
 
@@ -698,6 +794,73 @@
         </section>
 
 
+        <!-- Tumor education guide -->
+        <section class="tumor-guide-section" id="tumor-guide">
+            <div class="section-heading guide-heading">
+                <div>
+                    <div class="section-kicker"><span>04</span> BRAIN MRI KNOWLEDGE CENTER</div>
+                    <h2>Know the <span>categories.</span></h2>
+                    <p>Learn what each label means, what is known about possible causes, and why an MRI label alone cannot establish a diagnosis.</p>
+                </div>
+                <span class="guide-side-note">EDUCATIONAL REFERENCE</span>
+            </div>
+
+            <div class="tumor-grid">
+                <article class="tumor-card tumor-glioma">
+                    <div class="tumor-card-top"><span class="tumor-index">01</span><span class="tumor-tag">GLIAL CELLS</span></div>
+                    <h3>Glioma</h3>
+                    <p class="tumor-definition">A group of tumors that begin in glial cells or related precursor cells in the brain or central nervous system. Behaviour ranges from slower-growing to aggressive, depending on the specific type.</p>
+                    <div class="tumor-detail"><strong>What causes it?</strong><p>The exact cause of most gliomas is unknown. They develop alongside genetic changes in cells; rare inherited syndromes and certain exposures, such as ionising radiation, can increase risk for some brain tumors.</p></div>
+                    <div class="tumor-detail"><strong>Why MRI matters</strong><p>MRI helps clinicians examine the tumor's location, size, and appearance. Imaging findings alone do not reliably determine every tumor's type or grade.</p></div>
+                </article>
+
+                <article class="tumor-card tumor-meningioma">
+                    <div class="tumor-card-top"><span class="tumor-index">02</span><span class="tumor-tag">MENINGES</span></div>
+                    <h3>Meningioma</h3>
+                    <p class="tumor-definition">A tumor that arises from the meninges, the protective layers surrounding the brain and spinal cord. Many are slow-growing and non-cancerous, but some behave more aggressively.</p>
+                    <div class="tumor-detail"><strong>What causes it?</strong><p>Most cases have no single known cause. Risk is associated with factors such as increasing age, certain inherited conditions, and previous radiation exposure; hormonal influences may also play a role.</p></div>
+                    <div class="tumor-detail"><strong>Why MRI matters</strong><p>MRI can show where a meningioma sits and how it relates to nearby structures. Clinical decisions depend on the full scan, symptoms, growth over time, and specialist assessment.</p></div>
+                </article>
+
+                <article class="tumor-card tumor-pituitary">
+                    <div class="tumor-card-top"><span class="tumor-index">03</span><span class="tumor-tag">PITUITARY GLAND</span></div>
+                    <h3>Pituitary tumor</h3>
+                    <p class="tumor-definition">A growth in or around the pituitary gland, which helps regulate hormones. Many pituitary tumors are benign, but they may affect hormone production or press on nearby structures.</p>
+                    <div class="tumor-detail"><strong>What causes it?</strong><p>The cause of most pituitary tumors is not known. Changes acquired in pituitary cells may contribute; rare inherited conditions, including MEN1 and other genetic syndromes, can increase risk.</p></div>
+                    <div class="tumor-detail"><strong>Why MRI matters</strong><p>Dedicated imaging can help examine the pituitary region. Hormone testing, symptoms, and medical evaluation may also be needed to understand a finding.</p></div>
+                </article>
+
+                <article class="tumor-card tumor-normal">
+                    <div class="tumor-card-top"><span class="tumor-index">04</span><span class="tumor-tag">DATASET LABEL</span></div>
+                    <h3>No-tumor class</h3>
+                    <p class="tumor-definition">This is the dataset label <code>notumor</code>. It means the model selected the class associated with images labelled as not showing a tumor in its training data.</p>
+                    <div class="tumor-detail"><strong>What does it mean?</strong><p>It does not prove that a scan is normal or rule out disease. The model can make mistakes and may not generalise to images from other scanners, hospitals, or patient groups.</p></div>
+                    <div class="tumor-detail"><strong>How to interpret it</strong><p>Use this output only for project demonstration and learning. Real clinical interpretation belongs to qualified healthcare professionals.</p></div>
+                </article>
+            </div>
+            <div class="source-note">
+                <span aria-hidden="true">ⓘ</span>
+                <p><strong>Medical accuracy note:</strong> The causes of most brain tumors are not fully understood. These summaries describe general research knowledge, not the cause of any individual person's tumor. References: <a href="https://www.cancer.gov/types/brain/patient/adult-brain-treatment-pdq" target="_blank" rel="noopener noreferrer">National Cancer Institute — CNS tumors</a>, <a href="https://www.cancer.gov/types/pituitary/what-are-pituitary-tumors" target="_blank" rel="noopener noreferrer">NCI — pituitary tumors</a>, and <a href="https://www.cancer.org/cancer/types/brain-spinal-cord-tumors-adults/causes-risks-prevention.html" target="_blank" rel="noopener noreferrer">American Cancer Society — causes and risk factors</a>.</p>
+            </div>
+        </section>
+
+        <!-- Model workflow -->
+        <section class="workflow-section" id="workflow">
+            <div class="section-heading guide-heading">
+                <div>
+                    <div class="section-kicker"><span>06</span> FROM IMAGE TO OUTPUT</div>
+                    <h2>Inside the <span>AI pipeline.</span></h2>
+                    <p>A clear view of the steps performed by this project when an image is submitted.</p>
+                </div>
+            </div>
+            <div class="workflow-grid">
+                <article class="workflow-card"><span class="workflow-number">01</span><div class="workflow-icon">↥</div><h3>Image input</h3><p>The user selects a supported JPG, PNG, or WEBP image for the demonstration.</p></article>
+                <article class="workflow-card"><span class="workflow-number">02</span><div class="workflow-icon">▦</div><h3>Preprocessing</h3><p>The image is resized to 224 × 224 pixels, converted to a tensor, and normalised for the model.</p></article>
+                <article class="workflow-card"><span class="workflow-number">03</span><div class="workflow-icon">⌘</div><h3>Model inference</h3><p>The trained PyTorch model scores four labels: glioma, meningioma, notumor, and pituitary.</p></article>
+                <article class="workflow-card"><span class="workflow-number">04</span><div class="workflow-icon">⌁</div><h3>Explain & review</h3><p>The interface shows model scores and a Grad-CAM overlay. The overlay is not a tumor boundary or a diagnosis.</p></article>
+            </div>
+        </section>
+
         <!-- Disclaimer -->
         <section class="disclaimer-panel">
 
@@ -728,8 +891,8 @@
         </a>
 
         <p>
-            Built for exploration.
-            <span>Designed with curiosity.</span>
+            NeuroLens · Brain MRI classification prototype.
+            <span>Built for learning and transparent AI exploration.</span>
         </p>
 
         <span class="footer-status">
@@ -748,6 +911,93 @@
 
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script>
+    (() => {
+      const quoteEl = document.getElementById('dailyQuoteTitle');
+      const quoteDate = document.getElementById('quoteDate');
+      const newQuoteBtn = document.getElementById('newQuoteBtn');
+      const reportPrediction = document.getElementById('reportPrediction');
+      const reportScores = document.getElementById('reportScores');
+      const reportStatus = document.getElementById('reportStatus');
+      const resultsEl = document.getElementById('results');
+      const emptyEl = document.getElementById('empty');
+      const printBtn = document.getElementById('printReportBtn');
+      const quotes = [
+        'Great things are built one curious question at a time.',
+        'Progress is proof that small steps matter.',
+        'Stay curious. The next breakthrough may begin with a simple question.',
+        'You do not need to know everything; you just need to keep learning.',
+        'Every bug is feedback. Every fix is progress.',
+        'Build with purpose, test with patience, improve with courage.',
+        'Consistency turns ideas into things people can use.',
+        'Be proud of how far you have come, then take the next step.',
+        'A strong project is made from experiments, not guesses.',
+        'Think clearly, ask better questions, and keep exploring.',
+        'Your future skills are built by what you practise today.',
+        'The goal is not perfection on the first try. It is progress with every try.'
+      ];
+      const today = new Date();
+      const dayIndex = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86400000) % quotes.length;
+      let quoteIndex = (dayIndex + quotes.length) % quotes.length;
+      function showQuote(index) {
+        quoteEl.textContent = quotes[index];
+        quoteDate.textContent = today.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase();
+      }
+      showQuote(quoteIndex);
+      newQuoteBtn.addEventListener('click', () => { quoteIndex = (quoteIndex + 1) % quotes.length; showQuote(quoteIndex); });
+
+      function collectReport() {
+        const rawText = (resultsEl?.innerText || '').trim();
+        const hasOutput = rawText.length > 0 && !/awaiting your image|your results and class scores will appear here/i.test(rawText);
+        if (!hasOutput) {
+          reportPrediction.textContent = 'No prediction found yet — analyze an image first.';
+          reportScores.textContent = 'Class scores and visual explanation will be summarized here when the model returns output.';
+          reportStatus.textContent = 'AWAITING ANALYSIS';
+          reportStatus.classList.remove('is-ready');
+          return { hasOutput: false, rawText: '' };
+        }
+        const lines = rawText.split('\n').map(x => x.trim()).filter(Boolean);
+        const firstUseful = lines.find(x => /glioma|meningioma|pituitary|no.?tumou?r|prediction|predicted|classification|result/i.test(x)) || lines[0];
+        reportPrediction.textContent = firstUseful.slice(0, 220);
+        reportScores.textContent = lines.slice(0, 14).join(' • ').slice(0, 1200);
+        reportStatus.textContent = 'OUTPUT CAPTURED';
+        reportStatus.classList.add('is-ready');
+        return { hasOutput: true, rawText };
+      }
+      // Watch only the result container. Observing the entire results panel as well
+      // caused duplicate report scans while the model UI was updating.
+      let reportUpdateQueued = false;
+      const observer = new MutationObserver(() => {
+        if (reportUpdateQueued) return;
+        reportUpdateQueued = true;
+        requestAnimationFrame(() => {
+          reportUpdateQueued = false;
+          collectReport();
+        });
+      });
+      if (resultsEl) observer.observe(resultsEl, { childList: true, subtree: true, characterData: true });
+      printBtn.addEventListener('click', () => {
+        const report = collectReport();
+        if (!report.hasOutput) {
+          alert('Please analyze an MRI image first. The detailed report will be ready after the model displays its results.');
+          document.getElementById('workspace')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        const existing = document.getElementById('printableReportText');
+        if (existing) existing.remove();
+        const printable = document.createElement('div');
+        printable.id = 'printableReportText';
+        printable.innerHTML = '<div class="print-report-header"><div class="print-brand">NeuroLens<span>.</span></div><p>EDUCATIONAL BRAIN MRI CLASSIFICATION REPORT</p><h1>Analysis output summary</h1><div class="print-meta">Generated: ' + new Date().toLocaleString() + '</div></div><h2>Model output</h2><pre></pre><h2>Interpretation and limitations</h2><p>This document reproduces the output shown by the NeuroLens educational model. The model may be wrong and can be affected by image quality, training data, and differences between scanners or populations. This output is not a diagnosis and must not be used to make treatment decisions. Consult a qualified healthcare professional for clinical interpretation.</p>';
+        printable.querySelector('pre').textContent = report.rawText;
+        document.body.appendChild(printable);
+        document.body.classList.add('printing-neurolens-report');
+        window.print();
+        document.body.classList.remove('printing-neurolens-report');
+        printable.remove();
+      });
+      collectReport();
+    })();
+    </script>
 
 </body>
 </html>
